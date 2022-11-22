@@ -1,0 +1,14 @@
+spring:
+  neo4j:
+#    uri: bolt://localhost:7687
+    uri: neo4j+s://ab6bbbca.databases.neo4j.io
+    authentication:
+      username: neo4j
+      password: qeARmHp0V_OSxravPEZC-yot-unRoFsI5YgYy5Ws-Hs
+  #      password: movies
+  data:
+    neo4j:
+      database: neo4j
+
+logging.level.org.springframework.data.neo4j: DEBUG
+
