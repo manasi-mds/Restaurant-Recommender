@@ -14,8 +14,17 @@ with open("philadelphia.json", 'r') as fo:
 
 star_list = []
 for i in rest:
-    if("star" in i ):
-        star_list.append((i["star"]))
+    if("stars" in i ):
+       # print(i["stars"])
+        star_list.append((i["stars"]))
 
-print(set(star_list))
+star_unique = set(star_list)
+star_node = []
+tx = graph.begin()
+
+for i in star_unique:
+    star_node.append(Node("Stars", name = i) )
+    tx.create(star_node[-1])
+
+tx.commit()
 
