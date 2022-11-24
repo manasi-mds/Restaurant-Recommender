@@ -1,14 +1,12 @@
 package com.dbproject.restaurantrecommender.model;
 
-import lombok.Data;
 import org.springframework.data.neo4j.core.schema.Node;
 
-@Node("Alcohol")
-@Data
-public class AlcoholEntity extends BaseEntity {
+@Node("Credit_Card")
+public class CreditCardEntity extends BaseEntity{
     String name;
 
-    public boolean isAlcoholServed(){
+    private boolean isCreditCardAccepted(){
         return this.name.equalsIgnoreCase("yes");
     }
 }
