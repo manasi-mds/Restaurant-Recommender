@@ -16,7 +16,6 @@ public class PersonEntity extends BaseEntity{
     String email;
     String password;
 
-
     @Relationship(type = "CUISINE_PREFERENCE", direction = OUTGOING)
     Set<CuisinePreference> cuisinePreferences = new HashSet<>();
 
@@ -40,6 +39,5 @@ public class PersonEntity extends BaseEntity{
 
     @Relationship(type = "LIKE_RESTAURANT", direction = OUTGOING)
     Set<RestaurantEntity> likedRestaurants =  new HashSet<>();
-
 
 }
