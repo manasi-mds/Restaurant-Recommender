@@ -6,7 +6,7 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 
 @RelationshipProperties
 @Data
-public class CreditCardPreference {
+public class CreditCardPreference extends BaseEntity{
     Integer weight;
 
     @TargetNode

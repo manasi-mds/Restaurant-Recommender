@@ -1,10 +1,10 @@
 package com.dbproject.restaurantrecommender.model;
 
 import lombok.Data;
+import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
-import java.util.Date;
 import java.time.LocalDate;
 
 import java.time.LocalTime;
@@ -19,6 +19,7 @@ public class RestaurantEntity extends BaseEntity{
     String name;
     String address;
 
+    //@Id
     @Property("business_id")
     String businessId;
 
@@ -45,51 +46,50 @@ public class RestaurantEntity extends BaseEntity{
 
     public boolean isOpen(){
 
-        LocalDate currentdate = LocalDate.now();
+        LocalDate currentDate = LocalDate.now();
 
         String[] time;
-        switch(currentdate.getDayOfWeek().getValue()) {
-
+        switch(currentDate.getDayOfWeek().getValue()) {
 
             case 1:
                 //Monday
-                if(hoursMon=="")
+                if(hoursMon.isBlank())
                     return false;
                 time = hoursMon.split("-");
                 break;
             case 2:
                 //Tuesday
-                if(hoursTue=="")
+                if(hoursTue.isBlank())
                     return false;
                 time = hoursTue.split("-");
                 break;
             case 3:
                 //Wednesday
-                if(hoursWed=="")
+                if(hoursWed.isBlank())
                     return false;
                 time = hoursWed.split("-");
                 break;
             case 4:
                 //Thursday
-                if(hoursThu=="")
+                if(hoursThu.isBlank())
                     return false;
                 time = hoursThu.split("-");
                 break;
             case 5:
                 //Friday
-                if(hoursFri=="")
+                if(hoursFri.isBlank())
                     return false;
                 time = hoursFri.split("-");
                 break;
             case 6:
                 //Saturday
-                if(hoursSat=="")
+                if(hoursSat.isBlank())
                     return false;
                 time = hoursSat.split("-");
                 break;
             case 7:
                 //Sunday;
-                if(hoursSun=="")
+                if(hoursSun.isBlank())
                     return false;
                 time = hoursSun.split("-");
                 break;
@@ -104,19 +104,7 @@ public class RestaurantEntity extends BaseEntity{
 
         if( curr_time.compareTo(start_time)<0)
             return false;
-        if(curr_time.compareTo(end_time)>0)
-            return false;
-
-        return true;
-
-
-        // mon-sat?
-        // check if the time is present, if null return false
-
-        // break time (from and to) and check if it lies in between
-        //LocalTime localTime = LocalTime.parse("04:30");
-
-
+        return curr_time.compareTo(end_time) <= 0;
     }
 
     @Relationship(type = "HAS_CUISINE", direction = OUTGOING)

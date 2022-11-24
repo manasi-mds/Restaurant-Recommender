@@ -6,7 +6,7 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 
 @RelationshipProperties
 @Data
-public class AmbiencePreference {
+public class AmbiencePreference extends BaseEntity{
     Integer weight;
 
     @TargetNode

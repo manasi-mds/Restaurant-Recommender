@@ -8,7 +8,7 @@ import org.springframework.data.neo4j.core.schema.RelationshipProperties;
 @RelationshipProperties
 @Data
 
-public class StarsPreference {
+public class StarsPreference extends BaseEntity{
 
     Integer weight;
 

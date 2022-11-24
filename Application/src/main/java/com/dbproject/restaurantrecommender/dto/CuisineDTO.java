@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class CuisineDTO {
-    String id;
+    Long id;
     String name;
 }

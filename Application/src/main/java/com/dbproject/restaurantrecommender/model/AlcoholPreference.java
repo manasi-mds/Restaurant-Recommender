@@ -6,7 +6,8 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 
 @Data
 @RelationshipProperties
-public class AlcoholPreference {
+public class AlcoholPreference extends BaseEntity{
+
     Integer weight;
 
     @TargetNode

@@ -7,7 +7,7 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 @RelationshipProperties
 @Data
 
-public class WifiPreference {
+public class WifiPreference extends BaseEntity{
     Integer weight;
 
     @TargetNode
