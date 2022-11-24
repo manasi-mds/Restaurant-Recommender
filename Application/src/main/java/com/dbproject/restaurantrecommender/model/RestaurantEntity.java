@@ -4,6 +4,8 @@ import lombok.Data;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
+import java.util.Date;
+import java.time.LocalDate;
 
 import java.time.LocalTime;
 import java.util.HashSet;
@@ -42,13 +44,79 @@ public class RestaurantEntity extends BaseEntity{
     String hoursSun;
 
     public boolean isOpen(){
+
+        LocalDate currentdate = LocalDate.now();
+
+        String[] time;
+        switch(currentdate.getDayOfWeek().getValue()) {
+
+
+            case 1:
+                //Monday
+                if(hoursMon=="")
+                    return false;
+                time = hoursMon.split("-");
+                break;
+            case 2:
+                //Tuesday
+                if(hoursTue=="")
+                    return false;
+                time = hoursTue.split("-");
+                break;
+            case 3:
+                //Wednesday
+                if(hoursWed=="")
+                    return false;
+                time = hoursWed.split("-");
+                break;
+            case 4:
+                //Thursday
+                if(hoursThu=="")
+                    return false;
+                time = hoursThu.split("-");
+                break;
+            case 5:
+                //Friday
+                if(hoursFri=="")
+                    return false;
+                time = hoursFri.split("-");
+                break;
+            case 6:
+                //Saturday
+                if(hoursSat=="")
+                    return false;
+                time = hoursSat.split("-");
+                break;
+            case 7:
+                //Sunday;
+                if(hoursSun=="")
+                    return false;
+                time = hoursSun.split("-");
+                break;
+
+            default:
+                return false;
+        }
+        LocalTime curr_time = LocalTime.now();
+
+        LocalTime start_time = LocalTime.parse(time[0]);
+        LocalTime end_time = LocalTime.parse(time[1]);
+
+        if( curr_time.compareTo(start_time)<0)
+            return false;
+        if(curr_time.compareTo(end_time)>0)
+            return false;
+
+        return true;
+
+
         // mon-sat?
         // check if the time is present, if null return false
 
         // break time (from and to) and check if it lies in between
         //LocalTime localTime = LocalTime.parse("04:30");
 
-        return false;
+
     }
 
     @Relationship(type = "HAS_CUISINE", direction = OUTGOING)
