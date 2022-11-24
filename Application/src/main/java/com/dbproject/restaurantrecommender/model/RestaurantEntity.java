@@ -5,6 +5,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,9 +41,15 @@ public class RestaurantEntity extends BaseEntity{
     @Property("hours_sun")
     String hoursSun;
 
-    // TODO: Split hours
+    public boolean isOpen(){
+        // mon-sat?
+        // check if the time is present, if null return false
 
-    // TODO: Attr Relationships
+        // break time (from and to) and check if it lies in between
+        //LocalTime localTime = LocalTime.parse("04:30");
+
+        return false;
+    }
 
     @Relationship(type = "HAS_CUISINE", direction = OUTGOING)
     Set<CuisineEntity> hasCuisines = new HashSet<>();
