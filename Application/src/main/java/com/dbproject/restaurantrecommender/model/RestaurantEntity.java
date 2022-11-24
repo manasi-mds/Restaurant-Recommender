@@ -10,13 +10,10 @@ public class RestaurantEntity {
     Integer id;
     String name;
     String address;
-
     @Property("business_id")
     String businessId;
     Double latitude;
     Double longitude;
-
     @Property("review_count")
     Integer reviewCount;
-
 }
