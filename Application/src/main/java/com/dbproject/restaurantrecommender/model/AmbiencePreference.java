@@ -6,10 +6,9 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 
 @RelationshipProperties
 @Data
-
-public class WifiPreferences {
+public class AmbiencePreference {
     Integer weight;
 
     @TargetNode
-    private WifiEntity wifi;
+    private AmbienceEntity ambience;
 }

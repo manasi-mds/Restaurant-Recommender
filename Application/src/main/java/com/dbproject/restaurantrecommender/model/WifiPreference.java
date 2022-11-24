@@ -1,17 +1,15 @@
 package com.dbproject.restaurantrecommender.model;
 
-import org.springframework.data.neo4j.core.schema.TargetNode;
 import lombok.Data;
 import org.springframework.data.neo4j.core.schema.RelationshipProperties;
-
+import org.springframework.data.neo4j.core.schema.TargetNode;
 
 @RelationshipProperties
 @Data
 
-public class StarsPreferences {
-
+public class WifiPreference {
     Integer weight;
 
     @TargetNode
-    private StarsEntity stars;
+    private WifiEntity wifi;
 }

@@ -5,7 +5,6 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Set;
 
 import static org.springframework.data.neo4j.core.schema.Relationship.Direction.OUTGOING;
@@ -18,8 +17,8 @@ public class PersonEntity extends BaseEntity{
     String password;
 
 
-    @Relationship(type = "CUISINE_PREFERENCES", direction = OUTGOING)
-    Set<CuisinePreferences> cuisinePreference = new HashSet<>();
+    @Relationship(type = "CUISINE_PREFERENCE", direction = OUTGOING)
+    Set<CuisinePreference> cuisinePreferences = new HashSet<>();
 
     @Relationship(type = "CREDIT_CARD_PREFERENCE", direction = OUTGOING)
     CreditCardPreference creditCardPreference;
@@ -28,13 +27,13 @@ public class PersonEntity extends BaseEntity{
     AlcoholPreference alcoholPreference;
 
     @Relationship(type = "AMBIENCE_PREFERENCE", direction = OUTGOING)
-    Set<AmbienceEntity> ambiencePreference = new HashSet<>();
+    Set<AmbiencePreference> ambiencePreferences = new HashSet<>();
 
     @Relationship(type = "WIFI_PREFERENCE", direction = OUTGOING)
-    WifiEntity wifiPreference;
+    WifiPreference wifiPreference;
 
     @Relationship(type = "MINIMUM_RATING", direction = OUTGOING)
-    StarsEntity hasRating;
+    StarsPreference minimumRating;
 
     @Relationship(type = "FOLLOWING", direction = OUTGOING)
     Set<PersonEntity> following = new HashSet<>();
