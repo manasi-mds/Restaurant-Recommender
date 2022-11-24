@@ -22,10 +22,10 @@ public class PersonEntity extends BaseEntity{
     Set<CuisinePreferences> cuisinePreference = new HashSet<>();
 
     @Relationship(type = "CREDIT_CARD_PREFERENCE", direction = OUTGOING)
-    CreditCardEntity creditCardPreference;
+    CreditCardPreference creditCardPreference;
 
     @Relationship(type = "ALCOHOL_PREFERENCE", direction = OUTGOING)
-    AlcoholEntity alcoholPreference;
+    AlcoholPreference alcoholPreference;
 
     @Relationship(type = "AMBIENCE_PREFERENCE", direction = OUTGOING)
     Set<AmbienceEntity> ambiencePreference = new HashSet<>();
@@ -35,7 +35,6 @@ public class PersonEntity extends BaseEntity{
 
     @Relationship(type = "MINIMUM_RATING", direction = OUTGOING)
     StarsEntity hasRating;
-
 
     @Relationship(type = "FOLLOWING", direction = OUTGOING)
     Set<PersonEntity> following = new HashSet<>();

@@ -6,9 +6,9 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 
 @RelationshipProperties
 @Data
-public class CuisinePreferences {
+public class CreditCardPreference {
     Integer weight;
 
     @TargetNode
-    private CuisineEntity cuisineEntity;
+    CreditCardEntity creditCardEntity;
 }

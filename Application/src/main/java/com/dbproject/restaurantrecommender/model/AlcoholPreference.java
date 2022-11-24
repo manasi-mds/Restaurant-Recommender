@@ -4,11 +4,11 @@ import lombok.Data;
 import org.springframework.data.neo4j.core.schema.RelationshipProperties;
 import org.springframework.data.neo4j.core.schema.TargetNode;
 
-@RelationshipProperties
 @Data
-public class CuisinePreferences {
+@RelationshipProperties
+public class AlcoholPreference {
     Integer weight;
 
     @TargetNode
-    private CuisineEntity cuisineEntity;
+    AlcoholEntity alcoholEntity;
 }
