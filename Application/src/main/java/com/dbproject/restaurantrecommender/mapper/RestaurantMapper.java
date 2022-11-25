@@ -25,11 +25,11 @@ public class RestaurantMapper {
         restaurantDTO.setCuisines(restaurantEntity.getHasCuisines().stream().map(CuisineMapper::convert).collect(Collectors.toList()));
         restaurantDTO.setAmbiences(restaurantEntity.getHasAmbiences().stream().map(AmbienceMapper::convert).collect(Collectors.toList()));
         restaurantDTO.setIsAlcoholServed(restaurantEntity.getHasAlcohol().isAlcoholServed());
-        restaurantDTO.setWifi(restaurantEntity.getHasWifi().getType());
-        restaurantDTO.setRating(restaurantEntity.getHasRating().getRating());
-        restaurantDTO.setIsCreditCardAccepted(restaurantEntity.getAcceptsCreditCard().isCreditCardAccepted());
+        restaurantDTO.setWifi( restaurantEntity.getHasWifi() == null ? null : restaurantEntity.getHasWifi().getType());
+        restaurantDTO.setRating(restaurantEntity.getHasRating() == null ? null : restaurantEntity.getHasRating().getRating());
+        restaurantDTO.setIsCreditCardAccepted(restaurantEntity.getAcceptsCreditCard() == null ? null : restaurantEntity.getAcceptsCreditCard().isCreditCardAccepted());
         restaurantDTO.setIsOpen(restaurantEntity.isOpen());
-        restaurantDTO.setIsOutdoorSeatingAvailable(restaurantEntity.getHasOutdoorSeating().isOutdoorSeatingAvailable());
+        restaurantDTO.setIsOutdoorSeatingAvailable(restaurantEntity.getHasOutdoorSeating() == null ? null : restaurantEntity.getHasOutdoorSeating().isOutdoorSeatingAvailable());
         return restaurantDTO;
     }
 }

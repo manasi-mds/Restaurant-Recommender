@@ -8,7 +8,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 public class CreditCardEntity extends BaseEntity{
     String name;
 
-    public boolean isCreditCardAccepted(){
+    public boolean isCreditCardAccepted() {
         return this.name.equalsIgnoreCase("yes");
     }
 }
