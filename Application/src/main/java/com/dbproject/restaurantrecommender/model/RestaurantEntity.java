@@ -22,8 +22,8 @@ public class RestaurantEntity extends BaseEntity{
     @Property("business_id")
     String businessId;
 
-    Double latitude;
-    Double longitude;
+    Float latitude;
+    Float longitude;
 
     @Property("review_count")
     Integer reviewCount;
@@ -44,12 +44,9 @@ public class RestaurantEntity extends BaseEntity{
     String hoursSun;
 
     public boolean isOpen(){
-
         LocalDate currentDate = LocalDate.now();
-
         String[] time;
         switch(currentDate.getDayOfWeek().getValue()) {
-
             case 1:
                 //Monday
                 if(hoursMon.isBlank())

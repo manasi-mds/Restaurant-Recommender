@@ -1,6 +1,5 @@
 package com.dbproject.restaurantrecommender.services;
 
-import com.dbproject.restaurantrecommender.controller.RestaurantController;
 import com.dbproject.restaurantrecommender.dto.RestaurantDTO;
 import com.dbproject.restaurantrecommender.mapper.RestaurantMapper;
 import com.dbproject.restaurantrecommender.model.RestaurantEntity;
