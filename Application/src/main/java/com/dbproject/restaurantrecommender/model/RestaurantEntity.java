@@ -19,7 +19,6 @@ public class RestaurantEntity extends BaseEntity{
     String name;
     String address;
 
-    //@Id
     @Property("business_id")
     String businessId;
 
@@ -124,4 +123,7 @@ public class RestaurantEntity extends BaseEntity{
 
     @Relationship(type = "HAS_RATING", direction = OUTGOING)
     StarsEntity hasRating;
+
+    @Relationship(type = "HAS_OUTDOOR_SEATING", direction = OUTGOING)
+    OutdoorSeatingEntity hasOutdoorSeating;
 }

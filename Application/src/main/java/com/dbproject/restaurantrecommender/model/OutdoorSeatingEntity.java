@@ -7,7 +7,6 @@ import org.springframework.data.neo4j.core.schema.Node;
 @Data
 @Node("Outdoor_Seating")
 public class OutdoorSeatingEntity extends BaseEntity{
-    //@Id
     String name;
 
     public boolean isOutdoorSeatingAvailable(){
