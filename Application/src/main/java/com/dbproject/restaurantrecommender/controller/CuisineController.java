@@ -1,10 +1,13 @@
 package com.dbproject.restaurantrecommender.controller;
 
+import com.dbproject.restaurantrecommender.api.ResponseBody;
+import com.dbproject.restaurantrecommender.api.ResponseGenerator;
 import com.dbproject.restaurantrecommender.dto.CuisineDTO;
 import com.dbproject.restaurantrecommender.services.ICuisineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -17,8 +20,8 @@ public class CuisineController {
     private final ICuisineService cuisineService;
 
     @GetMapping
-    List<CuisineDTO> getAllCuisines() {
-        return cuisineService.getAllCuisines();
+    ResponseBody getAllCuisines() {
+        return ResponseGenerator.createSuccessResponse(cuisineService.getAllCuisines());
     }
 
 }

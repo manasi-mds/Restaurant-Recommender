@@ -8,5 +8,5 @@ import org.springframework.data.neo4j.core.schema.Property;
 @Data
 public class StarsEntity extends BaseEntity {
     @Property("name")
-    Float rating;
+    Double rating;
 }

@@ -1,2 +1,5 @@
-package com.dbproject.restaurantrecommender.enums;public enum StarRating {
+package com.dbproject.restaurantrecommender.enums;
+
+public enum StarRating {
+
 }

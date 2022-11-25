@@ -11,8 +11,8 @@ public class RestaurantDTO {
     String name;
     String address;
     String businessId;
-    Float latitude;
-    Float longitude;
+    Double latitude;
+    Double longitude;
     Integer reviewCount;
     String hoursMon;
     String hoursTue;
@@ -25,7 +25,7 @@ public class RestaurantDTO {
     List<AmbienceDTO> ambiences;
     Boolean isAlcoholServed;
     WifiType wifi;
-    Float rating;
+    Double rating;
     Boolean isCreditCardAccepted;
     Boolean isOpen;
     Boolean isOutdoorSeatingAvailable;

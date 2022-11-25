@@ -22,8 +22,8 @@ public class RestaurantEntity extends BaseEntity{
     @Property("business_id")
     String businessId;
 
-    Float latitude;
-    Float longitude;
+    Double latitude;
+    Double longitude;
 
     @Property("review_count")
     Integer reviewCount;
