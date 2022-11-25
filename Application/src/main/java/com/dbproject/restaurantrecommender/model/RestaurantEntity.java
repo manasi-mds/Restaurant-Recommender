@@ -5,10 +5,11 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 import java.time.LocalDate;
-
+import java.time.format.DateTimeFormatter;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Objects;
 
 import static org.springframework.data.neo4j.core.schema.Relationship.Direction.OUTGOING;
 
@@ -48,43 +49,43 @@ public class RestaurantEntity extends BaseEntity{
         switch(currentDate.getDayOfWeek().getValue()) {
             case 1:
                 //Monday
-                if(hoursMon.isBlank())
+                if(Objects.isNull(hoursMon) || hoursMon.isBlank())
                     return false;
                 time = hoursMon.split("-");
                 break;
             case 2:
                 //Tuesday
-                if(hoursTue.isBlank())
+                if(Objects.isNull(hoursTue) || hoursTue.isBlank())
                     return false;
                 time = hoursTue.split("-");
                 break;
             case 3:
                 //Wednesday
-                if(hoursWed.isBlank())
+                if(Objects.isNull(hoursWed) || hoursWed.isBlank())
                     return false;
                 time = hoursWed.split("-");
                 break;
             case 4:
                 //Thursday
-                if(hoursThu.isBlank())
+                if(Objects.isNull(hoursThu) || hoursThu.isBlank())
                     return false;
                 time = hoursThu.split("-");
                 break;
             case 5:
                 //Friday
-                if(hoursFri.isBlank())
+                if(Objects.isNull(hoursFri) || hoursFri.isBlank())
                     return false;
                 time = hoursFri.split("-");
                 break;
             case 6:
                 //Saturday
-                if(hoursSat.isBlank())
+                if(Objects.isNull(hoursSat) || hoursSat.isBlank())
                     return false;
                 time = hoursSat.split("-");
                 break;
             case 7:
                 //Sunday;
-                if(hoursSun.isBlank())
+                if(Objects.isNull(hoursSun) || hoursSun.isBlank())
                     return false;
                 time = hoursSun.split("-");
                 break;
@@ -93,9 +94,9 @@ public class RestaurantEntity extends BaseEntity{
                 return false;
         }
         LocalTime curr_time = LocalTime.now();
-
-        LocalTime start_time = LocalTime.parse(time[0]);
-        LocalTime end_time = LocalTime.parse(time[1]);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:m");
+        LocalTime start_time = LocalTime.parse(time[0],formatter);
+        LocalTime end_time = LocalTime.parse(time[1],formatter);
 
         if( curr_time.compareTo(start_time)<0)
             return false;
