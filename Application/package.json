@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@cloudscape-design/components": "^3.0.126",
+    "@cloudscape-design/global-styles": "^1.0.5",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/material": "^5.10.15"
+  }
+}
