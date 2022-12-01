@@ -3,7 +3,9 @@ package com.dbproject.restaurantrecommender.dto;
 import com.dbproject.restaurantrecommender.enums.WifiType;
 import lombok.Data;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class RestaurantDTO {
@@ -14,13 +16,7 @@ public class RestaurantDTO {
     Double latitude;
     Double longitude;
     Integer reviewCount;
-    String hoursMon;
-    String hoursTue;
-    String hoursWed;
-    String hoursThu;
-    String hoursFri;
-    String hoursSat;
-    String hoursSun;
+    Map<String, String> hours = new HashMap<>();
     List<CuisineDTO> cuisines;
     List<AmbienceDTO> ambiences;
     Boolean isAlcoholServed;
