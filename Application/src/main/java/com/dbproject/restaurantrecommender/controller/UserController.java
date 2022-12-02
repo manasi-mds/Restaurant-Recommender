@@ -2,15 +2,11 @@ package com.dbproject.restaurantrecommender.controller;
 
 import com.dbproject.restaurantrecommender.api.ResponseBody;
 import com.dbproject.restaurantrecommender.api.ResponseGenerator;
-import com.dbproject.restaurantrecommender.dto.RestaurantDTO;
 import com.dbproject.restaurantrecommender.dto.UserDTO;
 import com.dbproject.restaurantrecommender.dto.UserPreferenceDTO;
-import com.dbproject.restaurantrecommender.services.IRestaurantService;
 import com.dbproject.restaurantrecommender.services.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -57,7 +53,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/potentalRestaurants")
-    ResponseBody getPotentalRestaurants(@PathVariable Long userId) {
+    ResponseBody getPotentialRestaurants(@PathVariable Long userId) {
         return ResponseGenerator.createSuccessResponse(userService.getPotentialRestaurants(userId));
     }
 

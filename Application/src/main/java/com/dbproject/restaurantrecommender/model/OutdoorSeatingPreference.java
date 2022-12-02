@@ -4,11 +4,11 @@ import lombok.Data;
 import org.springframework.data.neo4j.core.schema.RelationshipProperties;
 import org.springframework.data.neo4j.core.schema.TargetNode;
 
-@RelationshipProperties
 @Data
-public class AmbiencePreference extends BaseEntity{
+@RelationshipProperties
+public class OutdoorSeatingPreference {
     Integer weight;
 
     @TargetNode
-    private AmbienceEntity ambienceEntity;
+    private OutdoorSeatingEntity outdoorSeatingEntity;
 }

@@ -6,7 +6,7 @@ import org.springframework.data.neo4j.core.schema.Property;
 
 @Node("Stars")
 @Data
-public class StarsEntity extends BaseEntity {
+public class RatingEntity extends BaseEntity {
     @Property("name")
     Double rating;
 }

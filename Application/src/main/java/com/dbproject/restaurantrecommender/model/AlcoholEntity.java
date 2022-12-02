@@ -7,6 +7,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 @Data
 public class AlcoholEntity extends BaseEntity {
     String name;
+
     public boolean isAlcoholServed(){
         return this.name.equalsIgnoreCase("yes");
     }

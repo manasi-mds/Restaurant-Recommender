@@ -15,6 +15,5 @@ public interface IUserService {
     List<RestaurantDTO> getLikedRestaurants(Long userId);
     List<UserDTO> getPotentialFriends(Long userId);
     List<RestaurantDTO> getPotentialRestaurants(Long userId);
-
     void createPreference(Long userId, UserPreferenceDTO userPreferenceDTO);
 }

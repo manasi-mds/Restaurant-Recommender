@@ -43,6 +43,27 @@ public class RestaurantEntity extends BaseEntity{
     @Property("hours_sun")
     String hoursSun;
 
+    @Relationship(type = "HAS_CUISINE", direction = OUTGOING)
+    Set<CuisineEntity> hasCuisines = new HashSet<>();
+
+    @Relationship(type = "ACCEPTS_CREDIT_CARDS", direction = OUTGOING)
+    CreditCardEntity acceptsCreditCard;
+
+    @Relationship(type = "HAS_ALCOHOL", direction = OUTGOING)
+    AlcoholEntity hasAlcohol;
+
+    @Relationship(type = "HAS_AMBIENCE", direction = OUTGOING)
+    Set<AmbienceEntity> hasAmbiences = new HashSet<>();
+
+    @Relationship(type = "HAS_WIFI", direction = OUTGOING)
+    WifiEntity hasWifi;
+
+    @Relationship(type = "HAS_RATING", direction = OUTGOING)
+    RatingEntity hasRating;
+
+    @Relationship(type = "HAS_OUTDOOR_SEATING", direction = OUTGOING)
+    OutdoorSeatingEntity hasOutdoorSeating;
+
     public boolean isOpen(){
         LocalDate currentDate = LocalDate.now();
         String[] time;
@@ -102,25 +123,4 @@ public class RestaurantEntity extends BaseEntity{
             return false;
         return curr_time.compareTo(end_time) <= 0;
     }
-
-    @Relationship(type = "HAS_CUISINE", direction = OUTGOING)
-    Set<CuisineEntity> hasCuisines = new HashSet<>();
-
-    @Relationship(type = "ACCEPTS_CREDIT_CARDS", direction = OUTGOING)
-    CreditCardEntity acceptsCreditCard;
-
-    @Relationship(type = "HAS_ALCOHOL", direction = OUTGOING)
-    AlcoholEntity hasAlcohol;
-
-    @Relationship(type = "HAS_AMBIENCE", direction = OUTGOING)
-    Set<AmbienceEntity> hasAmbiences = new HashSet<>();
-
-    @Relationship(type = "HAS_WIFI", direction = OUTGOING)
-    WifiEntity hasWifi;
-
-    @Relationship(type = "HAS_RATING", direction = OUTGOING)
-    StarsEntity hasRating;
-
-    @Relationship(type = "HAS_OUTDOOR_SEATING", direction = OUTGOING)
-    OutdoorSeatingEntity hasOutdoorSeating;
 }

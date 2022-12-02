@@ -1,47 +1,24 @@
 package com.dbproject.restaurantrecommender.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.dbproject.restaurantrecommender.dto.preference.*;
+import com.dbproject.restaurantrecommender.dto.preference.WifiPreferenceDTO;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
-import org.springframework.boot.context.properties.source.InvalidConfigurationPropertyNameException;
-import org.springframework.data.neo4j.core.schema.Property;
+
+import java.util.List;
 
 
 @Data
-class AlcoholServed {
-    Boolean isAlcoholServed;
-    Float weight;
-}
-
-@Data
-class Cuisine {
-    Long cuisineId;
-    Float weight;
-}
-
-@Data
-class Ambience {
-    Long ambienceId;
-    Float weight;
-}
-
-@Data
-class CreditCardAccepted {
-    Boolean isCreditCardAccepted;
-    Float weight;
-}
-
-@Data
-class WifiTypeAvailable {
-    String wifiType;
-    Float weight;
-}
-
-
-
-
-@Data
-// TODO: Add json ignore properties
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserPreferenceDTO {
-    String name;
-
+    Long userId;
+    AlcoholServedPreferenceDTO alcoholServed;
+    List<CuisinePreferenceDTO> cuisines;
+    List<AmbiencePreferenceDTO> ambiences;
+    CreditCardPreferenceDTO creditCardAccepted;
+    WifiPreferenceDTO wifiTypeAvailable;
+    RatingPreferenceDTO minimumRating;
+    OutdoorSeatingPreferenceDTO outdoorSeating;
 }
