@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface RatingRepository extends Neo4jRepository<RatingEntity, Long> {
-    Optional<RatingEntity> findByName(String name);
+    Optional<RatingEntity> findByRating(Double name);
 }

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class RatingPreferenceDTO {
-    Float minRating;
+    Double minRating;
     Integer weight;
 }

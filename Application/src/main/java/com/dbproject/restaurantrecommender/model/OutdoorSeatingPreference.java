@@ -6,7 +6,7 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 
 @Data
 @RelationshipProperties
-public class OutdoorSeatingPreference {
+public class OutdoorSeatingPreference extends BaseEntity{
     Integer weight;
 
     @TargetNode

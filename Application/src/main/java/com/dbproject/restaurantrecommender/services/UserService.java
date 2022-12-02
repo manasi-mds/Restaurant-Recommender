@@ -107,7 +107,7 @@ public class UserService implements IUserService {
     private void addRatingPreference(UserPreferenceDTO userPreferenceDTO, UserEntity user) {
         if(userPreferenceDTO.getMinimumRating()!=null && userPreferenceDTO.getMinimumRating().getMinRating() != null) {
             checkRating(userPreferenceDTO.getMinimumRating().getMinRating());
-            Optional<RatingEntity> ratingEntity = ratingRepository.findByName(userPreferenceDTO.getMinimumRating().getMinRating().toString());
+            Optional<RatingEntity> ratingEntity = ratingRepository.findByRating(userPreferenceDTO.getMinimumRating().getMinRating());
             Preconditions.checkArgument(ratingEntity.isPresent(), "Rating info " + userPreferenceDTO.getMinimumRating().getMinRating() + " does not exist in the database");
             user.addRatingPreference(ratingEntity.get(), userPreferenceDTO.getMinimumRating().getWeight());
         }
@@ -177,7 +177,7 @@ public class UserService implements IUserService {
         }
     }
 
-    private void checkRating(Float minRating) {
+    private void checkRating(Double minRating) {
         Preconditions.checkArgument(minRating >= 1 && minRating <= 5, "Rating should be between 1 and 5");
         Preconditions.checkArgument(minRating % 0.5 == 0, "Rating should be in increments of 0.5");
     }
