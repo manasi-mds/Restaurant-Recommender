@@ -1,11 +1,9 @@
 package com.dbproject.restaurantrecommender.dto;
 
-
-import lombok.Data;
-
-@Data
-public class PersonDTO {
+public class UserPreferencesDTO {
     String name;
     String email;
     String password;
+    // TODO: Add more fields
+
 }

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,4 +22,11 @@ public class RestaurantService implements IRestaurantService {
         List<RestaurantEntity> restaurantEntities = restaurantRepository.findAll();
         return restaurantEntities.stream().map(RestaurantMapper::convert).collect(Collectors.toList());
     }
+
+    @Override
+    public Optional<RestaurantDTO> getRestaurantById(Long restaurantId) {
+        Optional<RestaurantEntity> restaurantEntity = restaurantRepository.findById(restaurantId);
+        return restaurantEntity.map(RestaurantMapper::convert);
+    }
+
 }
