@@ -59,7 +59,7 @@ public class UserService implements IUserService {
     @Override
     public List<UserDTO> getFollowedUsers(Long userId) {
         UserEntity user = verifyUser(userId);
-        return user.getFollowing().stream().map(UserMapper::convert).toList();
+        return user.getFollowing().stream().map(f -> UserMapper.convert(f.getUserEntity())).toList();
     }
 
     @Override
@@ -76,7 +76,7 @@ public class UserService implements IUserService {
     @Override
     public List<RestaurantDTO> getLikedRestaurants(Long userId) {
         UserEntity user = verifyUser(userId);
-        return user.getLikedRestaurants().stream().map(RestaurantMapper::convert).toList();
+        return user.getLikedRestaurants().stream().map(lr -> RestaurantMapper.convert(lr.getRestaurantEntity())).toList();
     }
 
     @Override
@@ -90,8 +90,8 @@ public class UserService implements IUserService {
     @Override
     public List<RestaurantDTO> getPotentialRestaurants(Long userId) {
         UserEntity user = verifyUser(userId);
-        Set<UserEntity> friends = user.getFollowing();
-        Set<RestaurantEntity> potentialRestaurants = friends.stream().map(UserEntity::getLikedRestaurants).flatMap(Set::stream).collect(Collectors.toSet());
+        Set<UserEntity> friends = user.getFollowing().stream().map(FollowUser::getUserEntity).collect(Collectors.toSet());
+        Set<RestaurantEntity> potentialRestaurants = friends.stream().map(friend-> friend.getLikedRestaurants().stream().map(LikeRestaurant::getRestaurantEntity).collect(Collectors.toSet())).flatMap(Collection::stream).collect(Collectors.toSet());
         return potentialRestaurants.stream().map(RestaurantMapper::convert).toList();
     }
 

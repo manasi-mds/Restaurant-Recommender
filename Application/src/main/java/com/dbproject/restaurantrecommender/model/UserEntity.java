@@ -43,10 +43,10 @@ public class UserEntity extends BaseEntity{
     OutdoorSeatingPreference outdoorSeatingPreference;
 
     @Relationship(type = "FOLLOWING", direction = OUTGOING)
-    Set<UserEntity> following = new HashSet<>();
+    Set<FollowUser> following = new HashSet<>();
 
     @Relationship(type = "LIKE_RESTAURANT", direction = OUTGOING)
-    Set<RestaurantEntity> likedRestaurants =  new HashSet<>();
+    Set<LikeRestaurant> likedRestaurants =  new HashSet<>();
 
     public void followUser(UserEntity user2, Boolean follow) {
         if(this.following==null)
@@ -55,14 +55,19 @@ public class UserEntity extends BaseEntity{
         if(follow) {
 //            System.out.println("User "+this.name+" is following "+user2.name);
 //            System.out.println(this.following.stream().map(UserEntity::getName).toList());
-            Preconditions.checkArgument(!this.following.contains(user2), "User "+this.name+" is already following "+user2.name);
+            //Preconditions.checkArgument(!this.following.contains(user2), "User "+this.name+" is already following "+user2.name);
 //            Preconditions.checkArgument(!this.following.stream().map(UserEntity::getId).collect(Collectors.toSet()).contains(user2.getId()), "User is already following " + user2.getName());
-            this.following.add(user2);
-        } else {
-//            Preconditions.checkArgument(this.following.contains(user2), "User "+this.name+" is not following "+user2.name);
-            Preconditions.checkArgument(this.following.stream().map(UserEntity::getId).collect(Collectors.toSet()).contains(user2.getId()), "User is not following " + user2.getName());
-            this.following.remove(user2);
+            FollowUser followUser = new FollowUser();
+            followUser.setUserEntity(user2);
+            this.following.add(followUser);
         }
+//        } else {
+////            Preconditions.checkArgument(this.following.contains(user2), "User "+this.name+" is not following "+user2.name);
+//            //Preconditions.checkArgument(this.following.stream().map(UserEntity::getId).collect(Collectors.toSet()).contains(user2.getId()), "User is not following " + user2.getName());
+////            FollowUser followUser = new FollowUser();
+////            followUser.setUserEntity(user2);
+////            this.following.remove(followUser);
+//        }
     }
 
     public void likeRestaurant(RestaurantEntity restaurant, boolean like) {
@@ -70,11 +75,13 @@ public class UserEntity extends BaseEntity{
             this.likedRestaurants = new HashSet<>();
 
         if(like) {
-            Preconditions.checkArgument(!this.likedRestaurants.stream().map(RestaurantEntity::getId).collect(Collectors.toSet()).contains(restaurant.getId()), "User has already liked " + restaurant.getName());
-            this.likedRestaurants.add(restaurant);
+            //Preconditions.checkArgument(!this.likedRestaurants.stream().map(RestaurantEntity::getId).collect(Collectors.toSet()).contains(restaurant.getId()), "User has already liked " + restaurant.getName());
+            LikeRestaurant likeRestaurant = new LikeRestaurant();
+            likeRestaurant.setRestaurantEntity(restaurant);
+            this.likedRestaurants.add(likeRestaurant);
         } else {
-            Preconditions.checkArgument(this.likedRestaurants.stream().map(RestaurantEntity::getId).collect(Collectors.toSet()).contains(restaurant.getId()), "User has not liked " + restaurant.getName());
-            this.likedRestaurants.remove(restaurant);
+            //Preconditions.checkArgument(this.likedRestaurants.stream().map(RestaurantEntity::getId).collect(Collectors.toSet()).contains(restaurant.getId()), "User has not liked " + restaurant.getName());
+            //this.likedRestaurants.remove(restaurant);
         }
     }
 
