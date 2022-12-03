@@ -1,10 +1,12 @@
 package com.dbproject.restaurantrecommender.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.neo4j.core.schema.Node;
 
 @Node("Credit_Card")
-@Data
+@Getter
+@Setter
 public class CreditCardEntity extends BaseEntity{
     String name;
 

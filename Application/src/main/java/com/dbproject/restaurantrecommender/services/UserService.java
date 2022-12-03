@@ -48,7 +48,9 @@ public class UserService implements IUserService {
     public void followUser(Long userId, Long followUserId) {
         Preconditions.checkArgument(!Objects.equals(userId, followUserId), "User cannot follow itself");
         UserEntity user1 = verifyUser(userId);
+        System.out.println("User 1: " + user1.getName());
         UserEntity user2 = verifyUser(followUserId);
+        System.out.println("User 2: " + user2.getName());
         user1.followUser(user2);
         userRepository.save(user1);
     }

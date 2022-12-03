@@ -1,6 +1,7 @@
 package com.dbproject.restaurantrecommender.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.neo4j.driver.internal.util.Preconditions;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
@@ -12,7 +13,8 @@ import java.util.Set;
 import static org.springframework.data.neo4j.core.schema.Relationship.Direction.OUTGOING;
 
 @Node("User")
-@Data
+@Getter
+@Setter
 public class UserEntity extends BaseEntity{
     String name;
     String email;

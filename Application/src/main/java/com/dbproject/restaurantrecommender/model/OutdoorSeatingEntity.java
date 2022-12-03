@@ -1,10 +1,11 @@
 package com.dbproject.restaurantrecommender.model;
 
-import lombok.Data;
-import org.springframework.data.neo4j.core.schema.Id;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.neo4j.core.schema.Node;
 
-@Data
+@Getter
+@Setter
 @Node("Outdoor_Seating")
 public class OutdoorSeatingEntity extends BaseEntity{
     String name;

@@ -1,11 +1,13 @@
 package com.dbproject.restaurantrecommender.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 
 @Node("Stars")
-@Data
+@Getter
+@Setter
 public class RatingEntity extends BaseEntity {
     @Property("name")
     Double rating;
