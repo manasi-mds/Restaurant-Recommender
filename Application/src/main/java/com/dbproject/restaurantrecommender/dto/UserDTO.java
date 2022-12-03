@@ -1,6 +1,5 @@
 package com.dbproject.restaurantrecommender.dto;
 
-
 import lombok.Data;
 
 @Data
