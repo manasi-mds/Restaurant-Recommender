@@ -7,7 +7,6 @@ import com.dbproject.restaurantrecommender.dto.UserPreferenceDTO;
 import com.dbproject.restaurantrecommender.services.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.neo4j.driver.internal.util.Preconditions;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
