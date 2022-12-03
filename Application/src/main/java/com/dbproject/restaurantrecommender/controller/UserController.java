@@ -26,7 +26,7 @@ public class UserController {
         return ResponseGenerator.createSuccessResponse(userService.getAllUsers());
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/{userId}/followedUsers")
     ResponseBody getFollowedUsers(@PathVariable Long userId) {
         return ResponseGenerator.createSuccessResponse(userService.getFollowedUsers(userId));
     }

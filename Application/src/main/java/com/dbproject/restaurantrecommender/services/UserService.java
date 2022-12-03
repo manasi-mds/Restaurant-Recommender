@@ -94,9 +94,18 @@ public class UserService implements IUserService {
     @Override
     public List<UserDTO> getPotentialFriends(Long userId) {
         UserEntity user = verifyUser(userId);
+        Set<Long> filteredUsers = user.getFollowing().stream().map(fu-> fu.getUserEntity().getId()).collect(Collectors.toSet());
+        filteredUsers.add(user.getId());
+
         List<RestaurantDTO> likedRestaurants = getLikedRestaurants(userId);
-        // TODO: Potential friends are users who like the same restaurants as the user
-        return null;
+        Set<Long> restaurantIds = likedRestaurants.stream().map(RestaurantDTO::getId).collect(Collectors.toSet());
+        System.out.println("Hereeee" + restaurantIds);
+
+        Set<UserEntity> potentialFriends = userRepository.getPotentialFriends(restaurantIds.stream().toList());
+        System.out.println(potentialFriends);
+
+        potentialFriends.removeIf(pf-> filteredUsers.contains(pf.getId()));
+        return potentialFriends.stream().map(UserMapper::convert).toList();
     }
 
     @Override
