@@ -75,6 +75,17 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Transactional
+    public void dislikeRestaurant(Long userId, Long restaurantId, Boolean like) {
+        UserEntity user = verifyUser(userId);
+        Optional<RestaurantEntity> optionalRestaurant = restaurantRepository.findById(restaurantId);
+        Preconditions.checkArgument(optionalRestaurant.isPresent(), "Restaurant with id " + restaurantId + "  does not exist");
+        RestaurantEntity restaurant = optionalRestaurant.get();
+        user.dislikeRestaurant(restaurant, like);
+        userRepository.save(user);
+    }
+
+    @Override
     public List<RestaurantDTO> getLikedRestaurants(Long userId) {
         UserEntity user = verifyUser(userId);
         return user.getLikedRestaurants().stream().map(lr -> RestaurantMapper.convert(lr.getRestaurantEntity())).toList();

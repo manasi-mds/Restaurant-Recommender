@@ -12,6 +12,8 @@ public interface IUserService {
     void followUser(Long userId, Long followUserId, Boolean follow);
     List<UserDTO> getFollowedUsers(Long userId);
     void likeRestaurant(Long userId, Long restaurantId, Boolean like);
+
+    void dislikeRestaurant(Long userId, Long restaurantId, Boolean dislike);
     List<RestaurantDTO> getLikedRestaurants(Long userId);
     List<UserDTO> getPotentialFriends(Long userId);
     List<RestaurantDTO> getPotentialRestaurants(Long userId);

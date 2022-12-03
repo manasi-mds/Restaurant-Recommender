@@ -46,6 +46,9 @@ public class UserEntity extends BaseEntity{
     @Relationship(type = "LIKE_RESTAURANT", direction = OUTGOING)
     Set<LikeRestaurant> likedRestaurants =  new HashSet<>();
 
+    @Relationship(type = "DISLIKE_RESTAURANT", direction = OUTGOING)
+    Set<DislikeRestaurant> dislikedRestaurants =  new HashSet<>();
+
     public void followUser(UserEntity user2, Boolean follow) {
         if(this.following==null)
             this.following = new HashSet<>();
@@ -80,6 +83,25 @@ public class UserEntity extends BaseEntity{
                     .filter(user -> user.getRestaurantEntity().getId().equals(restaurant.getId())).findFirst();
             Preconditions.checkArgument(likedRest.isPresent(), "Does not already like restaurant " + restaurant.getId() );
             this.likedRestaurants.remove(likedRest.get());
+        }
+    }
+
+    public void dislikeRestaurant(RestaurantEntity restaurant, boolean dislike) {
+        if(this.dislikedRestaurants==null)
+            this.dislikedRestaurants = new HashSet<>();
+
+        if(dislike) {
+            //Preconditions.checkArgument(!this.likedRestaurants.stream().map(RestaurantEntity::getId).collect(Collectors.toSet()).contains(restaurant.getId()), "User has already liked " + restaurant.getName());
+            DislikeRestaurant dislikeRestaurant = new DislikeRestaurant();
+            dislikeRestaurant.setRestaurantEntity(restaurant);
+            this.dislikedRestaurants.add(dislikeRestaurant);
+        } else {
+            //Preconditions.checkArgument(this.likedRestaurants.stream().map(RestaurantEntity::getId).collect(Collectors.toSet()).contains(restaurant.getId()), "User has not liked " + restaurant.getName());
+            //this.likedRestaurants.remove(restaurant);
+            Optional<DislikeRestaurant> dislikedRest = this.dislikedRestaurants.stream()
+                    .filter(user -> user.getRestaurantEntity().getId().equals(restaurant.getId())).findFirst();
+            Preconditions.checkArgument(dislikedRest.isPresent(), "Does not already like restaurant " + restaurant.getId() );
+            this.dislikedRestaurants.remove(dislikedRest.get());
         }
     }
 

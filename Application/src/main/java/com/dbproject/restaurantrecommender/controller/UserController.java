@@ -47,6 +47,14 @@ public class UserController {
         return ResponseGenerator.createSuccessResponse("Successfully "+likedOrNot+" the restaurant "+ restaurantId);
     }
 
+    @PutMapping("/dislikeRestaurant/{userId}/{restaurantId}")
+    ResponseBody dislikeRestaurant(@PathVariable Long userId, @PathVariable Long restaurantId, @RequestParam Boolean dislike) {
+        Preconditions.checkArgument(dislike != null, "Query param like cannot be null");
+        userService.dislikeRestaurant(userId, restaurantId, dislike);
+        String likedOrNot = dislike ? "disliked" : "un-disliked";
+        return ResponseGenerator.createSuccessResponse("Successfully "+likedOrNot+" the restaurant "+ restaurantId);
+    }
+
     @GetMapping("/{userId}/likedRestaurants")
     ResponseBody getLikedRestaurants(@PathVariable Long userId) {
         return ResponseGenerator.createSuccessResponse(userService.getLikedRestaurants(userId));
