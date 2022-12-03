@@ -7,7 +7,6 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.springframework.data.neo4j.core.schema.Relationship.Direction.OUTGOING;
 
