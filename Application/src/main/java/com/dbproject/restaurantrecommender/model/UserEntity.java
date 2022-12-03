@@ -49,7 +49,7 @@ public class UserEntity extends BaseEntity{
         if(this.following==null)
             this.following = new HashSet<>();
 
-        Preconditions.checkArgument(this.following.contains(user2), "User is already following " + user2.getName());
+        Preconditions.checkArgument(!this.following.contains(user2), "User is already following " + user2.getName());
         this.following.add(user2);
     }
 

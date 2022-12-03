@@ -36,7 +36,7 @@ public class UserController {
         return ResponseGenerator.createSuccessResponse("Followed the user "+ followUserId);
     }
 
-    @PutMapping("/{userId}/likeRestaurant/{restaurantId}")
+    @PutMapping("/likeRestaurant/{userId}/{restaurantId}")
     ResponseBody likeRestaurant(@PathVariable Long userId, @PathVariable Long restaurantId) {
         userService.likeRestaurant(userId, restaurantId);
         return ResponseGenerator.createSuccessResponse("Liked the restaurant "+ restaurantId);
@@ -47,12 +47,12 @@ public class UserController {
         return ResponseGenerator.createSuccessResponse(userService.getLikedRestaurants(userId));
     }
 
-    @GetMapping("/{userId}/potentalFriends")
+    @GetMapping("/{userId}/potentialFriends")
     ResponseBody getPotentialFriends(@PathVariable Long userId) {
         return ResponseGenerator.createSuccessResponse(userService.getPotentialFriends(userId));
     }
 
-    @GetMapping("/{userId}/potentalRestaurants")
+    @GetMapping("/{userId}/potentialRestaurants")
     ResponseBody getPotentialRestaurants(@PathVariable Long userId) {
         return ResponseGenerator.createSuccessResponse(userService.getPotentialRestaurants(userId));
     }
