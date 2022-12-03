@@ -5,10 +5,10 @@ import Pagination from '@cloudscape-design/components/pagination';
 import { Button, SpaceBetween, CollectionPreferences, Box, Header, Link } from '@cloudscape-design/components';
 import Table from '@cloudscape-design/components/table';
 
-import { paginationLabels, distributionSelectionLabels } from './labels';
-import { PROPERTY_FILTERING_I18N_CONSTANTS } from './table-property-filter-config.js';
+import { paginationLabels, restaurantSelectionLabels } from '../commons/labels';
+import { PROPERTY_FILTERING_I18N_CONSTANTS } from '../commons/operators.js';
 
-import './base.scss';
+import '../base.scss';
 
 const getFilterCounterText = count => `${count} ${count === 1 ? 'match' : 'matches'}`;
 
@@ -55,7 +55,7 @@ const TableHeader = props => {
   };
 
 const FullPageHeader = ({
-    resourceName = 'Cuisines',
+    resourceName = 'Restaurants',
     ...props
   }) => {
     const isOnlyOneSelected = props.selectedItems.length === 1;
@@ -105,19 +105,23 @@ const TableNoMatchState = props => (
   );
   
   export const PAGE_SIZE_OPTIONS = [
-    { value: 10, label: '10 Distributions' },
-    { value: 30, label: '30 Distributions' },
-    { value: 50, label: '50 Distributions' },
+    { value: 10, label: '10 Restaurants' },
+    { value: 30, label: '30 Restaurants' },
+    { value: 50, label: '50 Restaurants' },
   ];
 
   const VISIBLE_CONTENT_OPTIONS = [
     {
-      label: 'Main distribution properties',
+      label: 'Main Restaurant properties',
       options: [
-        { id: 'id', label: 'Distribution ID', editable: false },
-        { id: 'cuisine', label: 'Cuisine name' },
-        { id: 'deliveryMethod', label: 'Delivery method' },
-        { id: 'priceClass', label: 'Price class' },
+        { id: 'name', label: 'Restaurant Name', editable: false },
+        { id: 'address', label: 'Address' },
+        { id: 'cuisines', label: 'Cuisine Types' },
+        { id: 'isAlcoholServed', label: 'Alcohol?' },
+        { id: 'rating', label: 'Ratings' },
+        { id: 'latitude', label: 'Longitude' },
+        { id: 'longitude', label: 'Latitude' },
+        { id: 'isOpen', label: 'Open?' }
       ],
     },
   ];
@@ -151,7 +155,7 @@ const TableNoMatchState = props => (
     />
   );
 
-export function PropertyFilterTable({
+export function RestPropertyFilterTable({
   data,
   loadHelpPanelContent,
   columnDefinitions,
@@ -165,7 +169,7 @@ export function PropertyFilterTable({
     {
       propertyFiltering: {
         filteringProperties,
-        empty: <TableEmptyState resourceName="Distribution" />,
+        empty: <TableEmptyState resourceName="Restaurant" />,
         noMatch: (
           <TableNoMatchState
             onClearFilter={() => {
@@ -186,7 +190,7 @@ export function PropertyFilterTable({
       items={items}
       columnDefinitions={columnDefinitions}
       visibleColumns={preferences.visibleContent}
-      ariaLabels={distributionSelectionLabels}
+      ariaLabels={restaurantSelectionLabels}
       selectionType="multi"
       variant="full-page"
       stickyHeader={true}
@@ -201,7 +205,7 @@ export function PropertyFilterTable({
           serverSide={false}
         />
       }
-      loadingText="Loading distributions"
+      loadingText="Loading Restaurants"
       filter={
         <PropertyFilter
           i18nStrings={PROPERTY_FILTERING_I18N_CONSTANTS}
