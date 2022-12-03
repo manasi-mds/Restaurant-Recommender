@@ -9,6 +9,7 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 @Getter
 @RelationshipProperties
 public class DislikeRestaurant extends BaseEntity{
+
     @TargetNode
     RestaurantEntity restaurantEntity;
 }

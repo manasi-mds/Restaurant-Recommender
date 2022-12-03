@@ -61,7 +61,7 @@ public class UserEntity extends BaseEntity{
         } else {
             Optional<FollowUser> user2Follow = this.following.stream()
                     .filter(followUser -> followUser.getUserEntity().getId().equals(user2.getId()))
-                    .findFirst();
+                    .findAny();
             Preconditions.checkArgument(user2Follow.isPresent(), "Not following user " + user2.getName());
             this.following.remove(user2Follow.get());
         }
@@ -72,15 +72,14 @@ public class UserEntity extends BaseEntity{
             this.likedRestaurants = new HashSet<>();
 
         if(like) {
-            //Preconditions.checkArgument(!this.likedRestaurants.stream().map(RestaurantEntity::getId).collect(Collectors.toSet()).contains(restaurant.getId()), "User has already liked " + restaurant.getName());
+            Preconditions.checkArgument(this.likedRestaurants.stream().noneMatch(lr -> lr.getRestaurantEntity().getId().equals(restaurant.getId())), "Already liked restaurant " + restaurant.getName());
             LikeRestaurant likeRestaurant = new LikeRestaurant();
             likeRestaurant.setRestaurantEntity(restaurant);
             this.likedRestaurants.add(likeRestaurant);
         } else {
-            //Preconditions.checkArgument(this.likedRestaurants.stream().map(RestaurantEntity::getId).collect(Collectors.toSet()).contains(restaurant.getId()), "User has not liked " + restaurant.getName());
-            //this.likedRestaurants.remove(restaurant);
             Optional<LikeRestaurant> likedRest = this.likedRestaurants.stream()
-                    .filter(user -> user.getRestaurantEntity().getId().equals(restaurant.getId())).findFirst();
+                    .filter(user -> user.getRestaurantEntity().getId().equals(restaurant.getId()))
+                    .findAny();
             Preconditions.checkArgument(likedRest.isPresent(), "Does not already like restaurant " + restaurant.getId() );
             this.likedRestaurants.remove(likedRest.get());
         }
@@ -91,15 +90,14 @@ public class UserEntity extends BaseEntity{
             this.dislikedRestaurants = new HashSet<>();
 
         if(dislike) {
-            //Preconditions.checkArgument(!this.likedRestaurants.stream().map(RestaurantEntity::getId).collect(Collectors.toSet()).contains(restaurant.getId()), "User has already liked " + restaurant.getName());
+            Preconditions.checkArgument(this.dislikedRestaurants.stream().noneMatch(lr -> lr.getRestaurantEntity().getId().equals(restaurant.getId())), "Already disliked restaurant " + restaurant.getName());
             DislikeRestaurant dislikeRestaurant = new DislikeRestaurant();
             dislikeRestaurant.setRestaurantEntity(restaurant);
             this.dislikedRestaurants.add(dislikeRestaurant);
         } else {
-            //Preconditions.checkArgument(this.likedRestaurants.stream().map(RestaurantEntity::getId).collect(Collectors.toSet()).contains(restaurant.getId()), "User has not liked " + restaurant.getName());
-            //this.likedRestaurants.remove(restaurant);
             Optional<DislikeRestaurant> dislikedRest = this.dislikedRestaurants.stream()
-                    .filter(user -> user.getRestaurantEntity().getId().equals(restaurant.getId())).findFirst();
+                    .filter(user -> user.getRestaurantEntity().getId().equals(restaurant.getId()))
+                    .findAny();
             Preconditions.checkArgument(dislikedRest.isPresent(), "Does not already like restaurant " + restaurant.getId() );
             this.dislikedRestaurants.remove(dislikedRest.get());
         }

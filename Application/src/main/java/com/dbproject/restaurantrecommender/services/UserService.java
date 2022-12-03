@@ -97,12 +97,10 @@ public class UserService implements IUserService {
         Set<Long> filteredUsers = user.getFollowing().stream().map(fu-> fu.getUserEntity().getId()).collect(Collectors.toSet());
         filteredUsers.add(user.getId());
 
-        List<RestaurantDTO> likedRestaurants = getLikedRestaurants(userId);
+        List<RestaurantDTO> likedRestaurants = user.getLikedRestaurants().stream().map(lr -> RestaurantMapper.convert(lr.getRestaurantEntity())).toList();
         Set<Long> restaurantIds = likedRestaurants.stream().map(RestaurantDTO::getId).collect(Collectors.toSet());
-        System.out.println("Hereeee" + restaurantIds);
 
         Set<UserEntity> potentialFriends = userRepository.getPotentialFriends(restaurantIds.stream().toList());
-        System.out.println(potentialFriends);
 
         potentialFriends.removeIf(pf-> filteredUsers.contains(pf.getId()));
         return potentialFriends.stream().map(UserMapper::convert).toList();
