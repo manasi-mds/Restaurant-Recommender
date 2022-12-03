@@ -57,7 +57,7 @@ public class UserEntity extends BaseEntity{
         if(this.likedRestaurants==null)
             this.likedRestaurants = new HashSet<>();
 
-        Preconditions.checkArgument(this.likedRestaurants.contains(restaurant), "User has already liked " + restaurant.getName());
+        Preconditions.checkArgument(!this.likedRestaurants.contains(restaurant), "User has already liked " + restaurant.getName());
         this.likedRestaurants.add(restaurant);
     }
 
