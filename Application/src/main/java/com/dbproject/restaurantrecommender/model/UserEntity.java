@@ -76,6 +76,10 @@ public class UserEntity extends BaseEntity{
         } else {
             //Preconditions.checkArgument(this.likedRestaurants.stream().map(RestaurantEntity::getId).collect(Collectors.toSet()).contains(restaurant.getId()), "User has not liked " + restaurant.getName());
             //this.likedRestaurants.remove(restaurant);
+            Optional<LikeRestaurant> likedRest = this.likedRestaurants.stream()
+                    .filter(user -> user.getRestaurantEntity().getId().equals(restaurant.getId())).findFirst();
+            Preconditions.checkArgument(likedRest.isPresent(), "Does not already like restaurant " + restaurant.getId() );
+            this.likedRestaurants.remove(likedRest.get());
         }
     }
 
