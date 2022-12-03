@@ -6,9 +6,7 @@ import org.neo4j.driver.internal.util.Preconditions;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.data.neo4j.core.schema.Relationship.Direction.OUTGOING;
@@ -53,21 +51,17 @@ public class UserEntity extends BaseEntity{
             this.following = new HashSet<>();
 
         if(follow) {
-//            System.out.println("User "+this.name+" is following "+user2.name);
-//            System.out.println(this.following.stream().map(UserEntity::getName).toList());
-            //Preconditions.checkArgument(!this.following.contains(user2), "User "+this.name+" is already following "+user2.name);
-//            Preconditions.checkArgument(!this.following.stream().map(UserEntity::getId).collect(Collectors.toSet()).contains(user2.getId()), "User is already following " + user2.getName());
+            Preconditions.checkArgument(this.following.stream().noneMatch(fu-> Objects.equals(fu.getUserEntity().getId(), user2.getId())), "Already following user " + user2.getName());
             FollowUser followUser = new FollowUser();
             followUser.setUserEntity(user2);
             this.following.add(followUser);
+        } else {
+            Optional<FollowUser> user2Follow = this.following.stream()
+                    .filter(followUser -> followUser.getUserEntity().getId().equals(user2.getId()))
+                    .findFirst();
+            Preconditions.checkArgument(user2Follow.isPresent(), "Not following user " + user2.getName());
+            this.following.remove(user2Follow.get());
         }
-//        } else {
-////            Preconditions.checkArgument(this.following.contains(user2), "User "+this.name+" is not following "+user2.name);
-//            //Preconditions.checkArgument(this.following.stream().map(UserEntity::getId).collect(Collectors.toSet()).contains(user2.getId()), "User is not following " + user2.getName());
-////            FollowUser followUser = new FollowUser();
-////            followUser.setUserEntity(user2);
-////            this.following.remove(followUser);
-//        }
     }
 
     public void likeRestaurant(RestaurantEntity restaurant, boolean like) {

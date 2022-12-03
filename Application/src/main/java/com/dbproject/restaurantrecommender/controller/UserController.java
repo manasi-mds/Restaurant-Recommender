@@ -33,7 +33,6 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/follow/{followUserId}")
-    @Transactional
     ResponseBody followUser(@PathVariable Long userId, @PathVariable Long followUserId, @RequestParam Boolean follow) {
         Preconditions.checkArgument(follow != null, "Follow parameter is required");
         userService.followUser(userId, followUserId, follow);

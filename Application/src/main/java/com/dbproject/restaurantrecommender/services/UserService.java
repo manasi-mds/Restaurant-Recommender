@@ -48,6 +48,7 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Transactional
     public void followUser(Long userId, Long followUserId, Boolean follow) {
         Preconditions.checkArgument(!Objects.equals(userId, followUserId), "User cannot follow itself");
         UserEntity user1 = verifyUser(userId);
@@ -150,16 +151,20 @@ public class UserService implements IUserService {
     }
 
     private void addWifiPreference(UserPreferenceDTO userPreferenceDTO, UserEntity user) {
-        if (userPreferenceDTO.getWifiTypeAvailable() != null && StringUtils.isNotBlank((userPreferenceDTO.getWifiTypeAvailable().getWifiType()))) {
-            WifiType type = switch (userPreferenceDTO.getWifiTypeAvailable().getWifiType().toLowerCase()) {
-                case "free" -> WifiType.free;
-                case "paid" -> WifiType.paid;
-                default -> throw new IllegalArgumentException("Invalid wifi type");
-            };
-            Optional<WifiEntity> wifiEntity = wifiRepository.findByType(type);
-            Preconditions.checkArgument(wifiEntity.isPresent(), "Wifi type " + type + " does not exist in the database");
-            user.addWifiPreference(wifiEntity.get(), userPreferenceDTO.getWifiTypeAvailable().getWeight());
+        if(userPreferenceDTO.getWifiTypeAvailable() == null || StringUtils.isNotBlank(userPreferenceDTO.getWifiTypeAvailable().getWifiType())) {
+            user.setWifiPreference(null);
+            return;
         }
+
+        WifiType type = switch (userPreferenceDTO.getWifiTypeAvailable().getWifiType().toLowerCase()) {
+            case "free" -> WifiType.free;
+            case "paid" -> WifiType.paid; // TODO: should also include free
+            default -> throw new IllegalArgumentException("Invalid wifi type");
+        };
+        Optional<WifiEntity> wifiEntity = wifiRepository.findByType(type);
+        Preconditions.checkArgument(wifiEntity.isPresent(), "Wifi type " + type + " does not exist in the database");
+        user.addWifiPreference(wifiEntity.get(), userPreferenceDTO.getWifiTypeAvailable().getWeight());
+
     }
 
     private void addAmbiencePreference(UserPreferenceDTO userPreferenceDTO, UserEntity user) {
