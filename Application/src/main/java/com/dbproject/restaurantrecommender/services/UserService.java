@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.neo4j.driver.internal.util.Preconditions;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.*;
@@ -34,6 +35,7 @@ public class UserService implements IUserService {
     private final RatingRepository ratingRepository;
 
     @Override
+    @Transactional
     public UserDTO createUser(UserDTO userDTO) {
         UserEntity userEntity = UserMapper.create(userDTO);
         userEntity = userRepository.save(userEntity);
@@ -45,13 +47,12 @@ public class UserService implements IUserService {
         return userRepository.findAll().stream().map(UserMapper::convert).toList();
     }
 
-    public void followUser(Long userId, Long followUserId) {
+    @Override
+    public void followUser(Long userId, Long followUserId, Boolean follow) {
         Preconditions.checkArgument(!Objects.equals(userId, followUserId), "User cannot follow itself");
         UserEntity user1 = verifyUser(userId);
-        System.out.println("User 1: " + user1.getName());
         UserEntity user2 = verifyUser(followUserId);
-        System.out.println("User 2: " + user2.getName());
-        user1.followUser(user2);
+        user1.followUser(user2, follow);
         userRepository.save(user1);
     }
 
@@ -62,12 +63,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void likeRestaurant(Long userId, Long restaurantId) {
+    @Transactional
+    public void likeRestaurant(Long userId, Long restaurantId, Boolean like) {
         UserEntity user = verifyUser(userId);
         Optional<RestaurantEntity> optionalRestaurant = restaurantRepository.findById(restaurantId);
         Preconditions.checkArgument(optionalRestaurant.isPresent(), "Restaurant with id " + restaurantId + "  does not exist");
         RestaurantEntity restaurant = optionalRestaurant.get();
-        user.likeRestaurant(restaurant);
+        user.likeRestaurant(restaurant, like);
         userRepository.save(user);
     }
 
@@ -94,6 +96,7 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @Transactional
     public void createPreference(Long userId, UserPreferenceDTO userPreferenceDTO) {
         UserEntity user = verifyUser(userId);
         addCuisinePreference(userPreferenceDTO, user);

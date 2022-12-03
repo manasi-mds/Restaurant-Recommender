@@ -6,6 +6,8 @@ import com.dbproject.restaurantrecommender.dto.UserDTO;
 import com.dbproject.restaurantrecommender.dto.UserPreferenceDTO;
 import com.dbproject.restaurantrecommender.services.IUserService;
 import lombok.RequiredArgsConstructor;
+import org.neo4j.driver.internal.util.Preconditions;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,15 +33,20 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/follow/{followUserId}")
-    ResponseBody followUser(@PathVariable Long userId, @PathVariable Long followUserId) {
-        userService.followUser(userId, followUserId);
-        return ResponseGenerator.createSuccessResponse("Followed the user "+ followUserId);
+    @Transactional
+    ResponseBody followUser(@PathVariable Long userId, @PathVariable Long followUserId, @RequestParam Boolean follow) {
+        Preconditions.checkArgument(follow != null, "Follow parameter is required");
+        userService.followUser(userId, followUserId, follow);
+        String followedOrNot = follow ? "Followed" : "Unfollowed";
+        return ResponseGenerator.createSuccessResponse(followedOrNot+ " the user "+ followUserId);
     }
 
     @PutMapping("/likeRestaurant/{userId}/{restaurantId}")
-    ResponseBody likeRestaurant(@PathVariable Long userId, @PathVariable Long restaurantId) {
-        userService.likeRestaurant(userId, restaurantId);
-        return ResponseGenerator.createSuccessResponse("Liked the restaurant "+ restaurantId);
+    ResponseBody likeRestaurant(@PathVariable Long userId, @PathVariable Long restaurantId, @RequestParam Boolean like) {
+        Preconditions.checkArgument(like != null, "Query param like cannot be null");
+        userService.likeRestaurant(userId, restaurantId, like);
+        String likedOrNot = like ? "liked" : "unliked";
+        return ResponseGenerator.createSuccessResponse("Successfully "+likedOrNot+" the restaurant "+ restaurantId);
     }
 
     @GetMapping("/{userId}/likedRestaurants")
