@@ -34,3 +34,4 @@ build/
 
 ### Node Modules ###
 ./src/main/ui/node_modules
+./src/main/ui/yarn.lock
