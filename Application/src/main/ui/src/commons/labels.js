@@ -24,6 +24,12 @@ export const appLayoutLabels = {
     allItemsSelectionLabel: () => 'select all',
     selectionGroupLabel: 'Distribution selection',
   };
+
+  export const restaurantSelectionLabels = {
+    itemSelectionLabel: (data, row) => `select ${row.id}`,
+    allItemsSelectionLabel: () => 'select all',
+    selectionGroupLabel: 'Restaurant selection',
+  };
   
   export const originsSelectionLabels = {
     itemSelectionLabel: (data, row) => `select ${row.name}`,
