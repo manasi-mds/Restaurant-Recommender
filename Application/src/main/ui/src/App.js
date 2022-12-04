@@ -13,8 +13,11 @@ import {
 
 import {SimpleMap} from './map.js';
 
-import {UserSignup} from './userSignup';
-import {GenRestTab} from './generalRest'
+import {UserSignup} from './TabContents/userSignup';
+import { UserPreferences } from './TabContents/userUpdate';
+import {GenRestTab} from './TabContents/generalRest';
+import {GetFollowersTab} from './TabContents/userQuery';
+import {LikedRestTab} from './TabContents/likedRest';
 function App() {
   
   
@@ -30,17 +33,37 @@ function App() {
           UserSignup()
         },
         {
-          label: "Second tab label",
+          label: "User Preferences",
+          id: "uUpdate",
+          content:  
+          UserPreferences()
+        },
+        {
+          label: "maptest",
           id: "second",
           content: 
-          SimpleMap(75.1652,39.9526)
+          SimpleMap(39.97465381516658,-75.20428157754901 )
           
         },
         {
           label: "General Restaurants",
-          id: "third",
+          id: "genRest",
           content:
           GenRestTab()
+          
+        },
+        {
+          label: "Liked Restaurants",
+          id: "likeRest",
+          content:
+          LikedRestTab()
+          
+        },
+        {
+          label: "Following",
+          id: "following",
+          content:
+          GetFollowersTab()
           
         }
       ]}

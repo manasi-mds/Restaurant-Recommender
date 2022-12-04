@@ -20,13 +20,13 @@ import {
     } 
     from '@mui/material';
 
-    import {PropertyFilterTable} from "./tables/sample_table";
-    import { useLocalStorage } from './commons/localStorage';
-    import { useColumnWidths } from './commons/use-column-widths';
-    import { COLUMN_DEFINITIONS, FILTERING_PROPERTIES, DEFAULT_PREFERENCES } from './tables/sample_table-property-filter-config';
+    import {PropertyFilterTable} from "../tables/sample_table";
+    import { useLocalStorage } from '../commons/localStorage';
+    import { useColumnWidths } from '../commons/use-column-widths';
+    import { COLUMN_DEFINITIONS, FILTERING_PROPERTIES, DEFAULT_PREFERENCES } from '../tables/sample_table-property-filter-config';
 
 
-export function UserSignup(){
+export function UserPreferences(){
   /* Collection Hooks */
   const [columnDefinitions, saveWidths] = useColumnWidths('React-TableServerSide-Widths', COLUMN_DEFINITIONS);
   const [preferences, setPreferences] = useLocalStorage('React-DistributionsTable-Preferences', DEFAULT_PREFERENCES);
