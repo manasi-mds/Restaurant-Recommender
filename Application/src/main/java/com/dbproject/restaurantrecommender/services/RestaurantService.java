@@ -190,19 +190,6 @@ public class RestaurantService implements IRestaurantService {
             }
         }
 
-        //Credit_Card
-        if(user.getCreditCardPreference()!=null) {
-            if(restaurant.getAcceptsCreditCard().isCreditCardAccepted() ==user.getCreditCardPreference().getCreditCardEntity().isCreditCardAccepted()) {
-                restCosine.add(1.0);
-            }
-            else {
-                if (restaurant.getHasAlcohol().isAlcoholServed() == user.getAlcoholPreference().getAlcoholEntity().isAlcoholServed()) {
-                    restCosine.add(1.0);
-                } else {
-                    restCosine.add(0.0);
-                }
-            }
-        }
 
         // Credit_Card
         if(user.getCreditCardPreference()!=null) {
@@ -261,7 +248,15 @@ public class RestaurantService implements IRestaurantService {
             normA += Math.pow(userVector.get(i), 2);
             normB += Math.pow(restaurantVector.get(i), 2);
         }
-        return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+        Double cosineSim;
+        if(normA==0 || normB==0) {
+            cosineSim = 0.0;
+        }
+        else {
+            cosineSim = dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+
+        }
+        return cosineSim;
     }
 
     boolean isStrict(Integer weight){
