@@ -158,9 +158,8 @@ public class UserEntity extends BaseEntity{
         this.outdoorSeatingPreference = op;
     }
 
-    public void addRatingPreference(RatingEntity ratingEntity, Integer weight) {
+    public void addRatingPreference(RatingEntity ratingEntity) {
         RatingPreference rp = new RatingPreference();
-        rp.setWeight(weight);
         rp.setRatingEntity(ratingEntity);
         this.minimumRating = rp;
     }

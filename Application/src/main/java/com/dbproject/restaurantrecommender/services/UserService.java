@@ -137,7 +137,7 @@ public class UserService implements IUserService {
         checkRating(userPreferenceDTO.getMinimumRating().getMinRating());
         Optional<RatingEntity> ratingEntity = ratingRepository.findByRating(userPreferenceDTO.getMinimumRating().getMinRating());
         Preconditions.checkArgument(ratingEntity.isPresent(), "Rating info " + userPreferenceDTO.getMinimumRating().getMinRating() + " does not exist in the database");
-        user.addRatingPreference(ratingEntity.get(), userPreferenceDTO.getMinimumRating().getWeight());
+        user.addRatingPreference(ratingEntity.get());
     }
 
     private void addOutdoorSeatingPreference(UserPreferenceDTO userPreferenceDTO, UserEntity user) {
