@@ -229,7 +229,7 @@ public class UserService implements IUserService {
         Preconditions.checkArgument(minRating % 0.5 == 0, "Rating should be in increments of 0.5");
     }
 
-    UserEntity verifyUser(Long userId) {
+    public UserEntity verifyUser(Long userId) {
         Optional<UserEntity> optionalUser = userRepository.findById(userId);
         Preconditions.checkArgument(optionalUser.isPresent(), "User not found");
         return optionalUser.get();

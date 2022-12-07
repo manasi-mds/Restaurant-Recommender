@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-public class RestaurantDTO {
+public class RestaurantUserDTO {
     Long id;
     String name;
     String address;
@@ -27,4 +27,5 @@ public class RestaurantDTO {
     Boolean isOutdoorSeatingAvailable;
     Boolean isLiked;
     Boolean isDisliked;
+    Double cosineSimilarity;
 }
