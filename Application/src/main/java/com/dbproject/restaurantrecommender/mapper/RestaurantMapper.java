@@ -59,7 +59,7 @@ public class RestaurantMapper {
         restaurantDTO.setIsOpen(restaurantEntity.isOpen());
         restaurantDTO.setIsOutdoorSeatingAvailable(restaurantEntity.getHasOutdoorSeating() == null ? null : restaurantEntity.getHasOutdoorSeating().isOutdoorSeatingAvailable());
         // TODO : add liked and disliked
-        // TODO : add cosine similarity
+        restaurantDTO.setCosineSimilarity(cosineSimilarity);
         return restaurantDTO;
     }
 }
