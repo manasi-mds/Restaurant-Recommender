@@ -76,6 +76,8 @@ public class RestaurantService implements IRestaurantService {
 
         // Filter out already disliked restaurants
         Set<Long> dislikedRestaurants = user.getDislikedRestaurants().stream().map(dr -> dr.getRestaurantEntity().getId()).collect(Collectors.toSet());
+
+
         restaurantEntities = restaurantEntities.stream().filter(r-> !dislikedRestaurants.contains(r.getId())).collect(Collectors.toList()); // TODO: test, might not work
 
         if(strictAmbiencePreferences.size()>0)
@@ -149,7 +151,7 @@ public class RestaurantService implements IRestaurantService {
     private ArrayList<Double> createCosineForRestaurant(UserEntity user, RestaurantEntity restaurant) {
         ArrayList<Double> restCosine = new ArrayList<>();
 
-        // Outdoor seating
+        //outdoor seating
         if(user.getOutdoorSeatingPreference()!=null) {
             if (restaurant.getHasOutdoorSeating() == null) {
                 restCosine.add(0.0);
@@ -158,7 +160,8 @@ public class RestaurantService implements IRestaurantService {
             }
         }
 
-        // Wifi_Preference
+
+        //Wifi_Preference
         if(user.getWifiPreference()!=null) {
             if(restaurant.getHasWifi()==null) {
                 restCosine.add(0.0);
@@ -174,11 +177,23 @@ public class RestaurantService implements IRestaurantService {
             }
         }
 
-
         // Alcohol
         if(user.getAlcoholPreference()!=null) {
             if(restaurant.getHasAlcohol()==null){
                 restCosine.add(0.0);
+            }
+            if(restaurant.getHasAlcohol().isAlcoholServed()==user.getAlcoholPreference().getAlcoholEntity().isAlcoholServed()) {
+                restCosine.add(1.0);
+            }
+            else {
+                restCosine.add(0.0);
+            }
+        }
+
+        //Credit_Card
+        if(user.getCreditCardPreference()!=null) {
+            if(restaurant.getAcceptsCreditCard().isCreditCardAccepted() ==user.getCreditCardPreference().getCreditCardEntity().isCreditCardAccepted()) {
+                restCosine.add(1.0);
             }
             else {
                 if (restaurant.getHasAlcohol().isAlcoholServed() == user.getAlcoholPreference().getAlcoholEntity().isAlcoholServed()) {
@@ -191,17 +206,15 @@ public class RestaurantService implements IRestaurantService {
 
         // Credit_Card
         if(user.getCreditCardPreference()!=null) {
-            if(restaurant.getAcceptsCreditCard()==null){
+            if (restaurant.getAcceptsCreditCard() == null) {
                 restCosine.add(0.0);
-            } else{
-                if(restaurant.getAcceptsCreditCard().isCreditCardAccepted()==user.getCreditCardPreference().getCreditCardEntity().isCreditCardAccepted()) {
+            } else {
+                if (restaurant.getAcceptsCreditCard().isCreditCardAccepted() == user.getCreditCardPreference().getCreditCardEntity().isCreditCardAccepted()) {
                     restCosine.add(1.0);
-                }
-                else {
+                } else {
                     restCosine.add(0.0);
                 }
             }
-
         }
 
         // Ambience
