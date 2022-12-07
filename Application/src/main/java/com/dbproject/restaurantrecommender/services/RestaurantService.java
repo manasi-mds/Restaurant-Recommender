@@ -93,6 +93,11 @@ public class RestaurantService implements IRestaurantService {
                 .sorted(Comparator.comparing(RestaurantUserDTO::getCosineSimilarity, Comparator.reverseOrder())).toList();
     }
 
+    //1->0.2
+    //2->0.4
+    //3->0.6
+    //4->0.8
+    //5->1.0
     private double convertWeight(int weight) {
         return (double) weight /5.0;
     }
@@ -100,12 +105,6 @@ public class RestaurantService implements IRestaurantService {
     private ArrayList<Double> createCosineForUser(UserEntity user) {
         ArrayList<Double> userCosine = new ArrayList<>();
 
-        //0->0
-        //1->0.2
-        //2->0.4
-        //3->0.6
-        //4->0.8
-        //5->1
         //cosine similarity order
         //Outdoor_Seating
         if(user.getOutdoorSeatingPreference()==null)
