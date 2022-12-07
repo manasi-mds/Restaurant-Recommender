@@ -8,8 +8,10 @@ import com.dbproject.restaurantrecommender.model.AmbiencePreference;
 import com.dbproject.restaurantrecommender.model.CuisinePreference;
 import com.dbproject.restaurantrecommender.model.RestaurantEntity;
 import com.dbproject.restaurantrecommender.model.UserEntity;
+import com.dbproject.restaurantrecommender.model.*;
 import com.dbproject.restaurantrecommender.respsitory.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
+import org.neo4j.driver.internal.util.Preconditions;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -42,20 +44,58 @@ public class RestaurantService implements IRestaurantService {
     @Override
     public List<RestaurantUserDTO> getPreferredRestaurants(Long userId) {
         UserEntity user = userService.verifyUser(userId);
+        Set<Long> likedRestaurants = user.getLikedRestaurants().stream().map(lr -> lr.getRestaurantEntity().getId()).collect(Collectors.toSet());
+
+        Preconditions.checkArgument(user.getCuisinePreferences().size()>0 && user.getAmbiencePreferences().size()>0, "User has not set preferences");
+
         // Figure out strict filtering parameters
-        // filter out already disliked restaurants
-        // fetch restaurants based on those parameters ... if no strict filtering, all restaurants
+        Set<CuisinePreference> strictCuisinePreferences = user.getCuisinePreferences().stream().filter(cp -> isStrict(cp.getWeight())).collect(Collectors.toSet());
+        Set<AmbiencePreference> strictAmbiencePreferences = user.getAmbiencePreferences().stream().filter(ap -> isStrict(ap.getWeight())).collect(Collectors.toSet());
+        WifiPreference strictWifiPreference = user.getWifiPreference() != null && isStrict(user.getWifiPreference().getWeight()) ? user.getWifiPreference() : null;
+        CreditCardPreference strictCreditCardPreference = user.getCreditCardPreference() != null && isStrict(user.getCreditCardPreference().getWeight()) ? user.getCreditCardPreference() : null;
+        OutdoorSeatingPreference strictOutdoorSeatingPreference = user.getOutdoorSeatingPreference() != null && isStrict(user.getOutdoorSeatingPreference().getWeight()) ? user.getOutdoorSeatingPreference() : null;
+        AlcoholPreference strictAlcoholPreference = user.getAlcoholPreference() != null && isStrict(user.getAlcoholPreference().getWeight()) ? user.getAlcoholPreference() : null;
+        RatingPreference strictRatingPreference = user.getMinimumRating() != null && isStrict(user.getMinimumRating().getWeight()) ? user.getMinimumRating() : null;
 
-        // cosine similarity - ordering based on that
-        ArrayList<Double> userVector = createCosineForUser(user);
+        // Initial selection
+        List<RestaurantEntity> restaurantEntities;
+        restaurantEntities = strictCuisinePreferences.isEmpty() ? restaurantRepository.findAll():
+                restaurantRepository.findByHasCuisines(strictCuisinePreferences.stream().map(CuisinePreference::getCuisineEntity).collect(Collectors.toSet()));
 
-        // we will get the liked
-        // return dto :)
-        return null;
+        // Remove closed restaurants
+        restaurantEntities = restaurantEntities.stream().filter(RestaurantEntity::isOpen).collect(Collectors.toList());
+
+        // Filter out already disliked restaurants
+        Set<RestaurantEntity> dislikedRestaurants = user.getDislikedRestaurants().stream().map(DislikeRestaurant::getRestaurantEntity).collect(Collectors.toSet());
+        restaurantEntities.removeAll(dislikedRestaurants); // TODO: test, might not work
+
+        // TODO: test, might not work
+        for(AmbiencePreference ap : strictAmbiencePreferences) {
+            restaurantEntities = restaurantEntities.stream().filter(r -> r.getHasAmbiences().contains(ap.getAmbienceEntity())).collect(Collectors.toList());
+        }
+        if(strictWifiPreference != null) {
+            restaurantEntities = restaurantEntities.stream().filter(r -> r.getHasWifi()!=null && r.getHasWifi().getType().equals(strictWifiPreference.getWifi().getType())).collect(Collectors.toList());
+        }
+        if(strictCreditCardPreference != null) {
+            restaurantEntities = restaurantEntities.stream().filter(r -> r.getAcceptsCreditCard()!=null && r.getAcceptsCreditCard().getId().equals(strictCreditCardPreference.getCreditCardEntity().getId())).collect(Collectors.toList());
+        }
+        if(strictOutdoorSeatingPreference != null) {
+            restaurantEntities = restaurantEntities.stream().filter(r -> r.getHasOutdoorSeating()!=null && r.getHasOutdoorSeating().getId().equals(strictOutdoorSeatingPreference.getOutdoorSeatingEntity().getId())).collect(Collectors.toList());
+        }
+        if(strictAlcoholPreference != null) {
+            restaurantEntities = restaurantEntities.stream().filter(r -> r.getHasAlcohol()!=null && r.getHasAlcohol().getId().equals(strictAlcoholPreference.getAlcoholEntity().getId())).collect(Collectors.toList());
+        }
+        if(strictRatingPreference != null) {
+            restaurantEntities = restaurantEntities.stream().filter(r -> r.getHasRating().getRating() >= strictRatingPreference.getRatingEntity().getRating()).collect(Collectors.toList());
+        }
+
+        return restaurantEntities.stream()
+                .map(r -> RestaurantMapper.convertToUserDTO(r, likedRestaurants, null, calculateCosineSimilarity(createCosineForUser(user), createCosineForRestaurant(user, r))))
+                .sorted(Comparator.comparing(RestaurantUserDTO::getCosineSimilarity, Comparator.reverseOrder())).toList();
     }
 
     private double convertWeight(int weight) {
-        return Double.valueOf(weight)/5.0;
+        return (double) weight /5.0;
     }
 
     private ArrayList<Double> createCosineForUser(UserEntity user) {
@@ -73,23 +113,20 @@ public class RestaurantService implements IRestaurantService {
             userCosine.add(0.0);
         else
             userCosine.add(convertWeight(user.getOutdoorSeatingPreference().getWeight()));
-        //Minimum_Rating
 
+        //Minimum_Rating
         if(user.getMinimumRating()==null)
             userCosine.add(0.0);
         else
             userCosine.add(convertWeight(user.getMinimumRating().getWeight()));
 
         //Wifi_Preference
-
         if(user.getWifiPreference()==null)
             userCosine.add(0.0);
         else
             userCosine.add(convertWeight(user.getWifiPreference().getWeight()));
 
-
         //Alcohol
-
         if(user.getAlcoholPreference()==null)
             userCosine.add(0.0);
         else
@@ -109,7 +146,6 @@ public class RestaurantService implements IRestaurantService {
                 userCosine.add(convertWeight(ap.getWeight()));
             }
         }
-
 
         //Cuisine
         if(user.getCuisinePreferences()==null)
@@ -144,12 +180,15 @@ public class RestaurantService implements IRestaurantService {
             restCosine.add(0.0);
         }
         else {
-            double rating = restaurant.getHasRating().getRating();
-            if(rating>=user.getMinimumRating().getRatingEntity().getRating()) {
-                restCosine.add(1.0);
-            }
-            else {
+            if(restaurant.getHasRating()==null){
                 restCosine.add(0.0);
+            } else {
+                double rating = restaurant.getHasRating().getRating();
+                if (rating >= user.getMinimumRating().getRatingEntity().getRating()) {
+                    restCosine.add(1.0);
+                } else {
+                    restCosine.add(0.0);
+                }
             }
         }
 
@@ -175,7 +214,6 @@ public class RestaurantService implements IRestaurantService {
 
 
         //Alcohol
-
         if(user.getAlcoholPreference()==null) {
             restCosine.add(0.0);
         }
@@ -189,7 +227,6 @@ public class RestaurantService implements IRestaurantService {
         }
 
         //Credit_Card
-
         if(user.getCreditCardPreference()==null) {
             restCosine.add(0.0);
         }
@@ -204,45 +241,40 @@ public class RestaurantService implements IRestaurantService {
 
 
         //Ambience
-
         if(user.getAmbiencePreferences()==null) {
             restCosine.add(0.0);
         }
         else {
-            double amb = 0.0;
             for (AmbiencePreference ap : user.getAmbiencePreferences()) {
-                if(restaurant.getHasAmbiences().contains(ap)) {
-                    amb = 1.0;
+                if(restaurant.getHasAmbiences().contains(ap.getAmbienceEntity())) {
+                    restCosine.add(1.0);
+                }
+                else {
+                    restCosine.add(0.0);
                 }
             }
-            restCosine.add(amb);
-
         }
 
-
         //cuisine
-
         if(user.getCuisinePreferences()==null) {
             restCosine.add(0.0);
         }
         else {
-            double cui = 0.0;
+            //double cui = 0.0;
             for (CuisinePreference ap : user.getCuisinePreferences()) {
-                if(restaurant.getHasCuisines().contains(ap)) {
-                    cui = 1.0;
+                if(restaurant.getHasCuisines().contains(ap.getCuisineEntity())) {
+                    restCosine.add(1.0);
+                }
+                else {
+                    restCosine.add(0.0);
                 }
             }
-            restCosine.add(cui);
         }
-
-
-
-
-
         return restCosine;
     }
 
     private Double calculateCosineSimilarity(ArrayList<Double> userVector, ArrayList<Double> restaurantVector) {
+        Preconditions.checkArgument(userVector.size()==restaurantVector.size(), "Vectors should be of the same size");
         double dotProduct = 0.0;
         double normA = 0.0;
         double normB = 0.0;
@@ -252,6 +284,10 @@ public class RestaurantService implements IRestaurantService {
             normB += Math.pow(restaurantVector.get(i), 2);
         }
         return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+    }
+
+    boolean isStrict(Integer weight){
+        return weight == 5;
     }
 
 }
