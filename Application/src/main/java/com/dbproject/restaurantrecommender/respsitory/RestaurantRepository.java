@@ -10,5 +10,5 @@ import java.util.Set;
 
 @Repository
 public interface RestaurantRepository extends Neo4jRepository<RestaurantEntity, Long> {
-    List<RestaurantEntity> findByHasCuisines(Set<CuisineEntity> hasCuisines);
+    List<RestaurantEntity> findByHasCuisinesContains(CuisineEntity cuisineEntity);
 }
