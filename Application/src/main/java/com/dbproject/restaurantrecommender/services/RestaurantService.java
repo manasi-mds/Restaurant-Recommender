@@ -160,7 +160,6 @@ public class RestaurantService implements IRestaurantService {
             }
         }
 
-
         //Wifi_Preference
         if(user.getWifiPreference()!=null) {
             if(restaurant.getHasWifi()==null) {
@@ -248,7 +247,7 @@ public class RestaurantService implements IRestaurantService {
             normA += Math.pow(userVector.get(i), 2);
             normB += Math.pow(restaurantVector.get(i), 2);
         }
-        Double cosineSim;
+        double cosineSim;
         if(normA==0 || normB==0) {
             cosineSim = 0.0;
         }
