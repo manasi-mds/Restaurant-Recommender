@@ -62,7 +62,7 @@ public class RestaurantService implements IRestaurantService {
         }
         else{
             for(CuisinePreference scp : strictCuisinePreferences){
-                restaurantEntities.addAll(restaurantRepository.havingACuisine(scp.getCuisineEntity()));
+                restaurantEntities.addAll(restaurantRepository.havingACuisine(scp.getCuisineEntity().getId()));
             }
         }
         restaurantEntities = new HashSet<>(restaurantEntities).stream().toList();
