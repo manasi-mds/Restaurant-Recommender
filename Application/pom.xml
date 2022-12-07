@@ -15,6 +15,10 @@
     <description>RestaurantRecommender</description>
     <properties>
         <java.version>17</java.version>
+        <frontend-src-dir>${project.basedir}/src/main/ui</frontend-src-dir>
+        <node.version>v18.0.0</node.version>
+        <yarn.version>v1.22.19</yarn.version>
+        <frontend-maven-plugin.version>1.9.1</frontend-maven-plugin.version>
     </properties>
     <dependencies>
         <dependency>
@@ -46,6 +50,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
+<<<<<<< HEAD
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
         <dependency>
@@ -54,6 +59,16 @@
             <version>3.12.0</version>
         </dependency>
 
+=======
+        <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-rest</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+>>>>>>> b10f11c (Initial commit of the UI, edited pom to get react working with maven, set up basic frontend elements that will get integrated with the proper APIs once the backend is fully set up (namely submission form, radio buttons, selects, and table for displaying results from GET.)
     </dependencies>
 
     <build>
@@ -70,6 +85,71 @@
                     </excludes>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                    <artifactId>frontend-maven-plugin</artifactId>
+                    <version>${frontend-maven-plugin.version}</version>
+
+                    <configuration>
+                        <nodeVersion>${node.version}</nodeVersion>
+                        <yarnVersion>${yarn.version}</yarnVersion>
+                        <workingDirectory>${frontend-src-dir}</workingDirectory>
+                        <installDirectory>${project.build.directory}</installDirectory>
+                    </configuration>
+
+                    <executions>
+                        <execution>
+                            <id>install-frontend-tools</id>
+                            <goals>
+                                <goal>install-node-and-yarn</goal>
+                            </goals>
+                        </execution>
+
+                        <execution>
+                            <id>yarn-install</id>
+                            <goals>
+                                <goal>yarn</goal>
+                            </goals>
+                            <configuration>
+                                <arguments>install</arguments>
+                            </configuration>
+                        </execution>
+
+                        <execution>
+                            <id>build-frontend</id>
+                            <goals>
+                                <goal>yarn</goal>
+                            </goals>
+                            <phase>prepare-package</phase>
+                            <configuration>
+                                <arguments>build</arguments>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.0.1</version>
+                    <executions>
+                        <execution>
+                            <id>position-react-build</id>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <phase>prepare-package</phase>
+                            <configuration>
+                                <outputDirectory>${project.build.outputDirectory}/static</outputDirectory>
+                                <resources>
+                                    <resource>
+                                        <directory>${frontend-src-dir}/build</directory>
+                                        <filtering>false</filtering>
+                                    </resource>
+                                </resources>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
         </plugins>
     </build>
 
