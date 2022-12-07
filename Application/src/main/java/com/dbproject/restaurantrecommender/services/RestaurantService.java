@@ -68,23 +68,6 @@ public class RestaurantService implements IRestaurantService {
         }
         restaurantEntities = new HashSet<>(restaurantEntities).stream().toList();
 
-        // Distance filtering
-        if(lat!=null && lon!=null && user.getDistancePreference()!=null) {
-            String userLatLong = lat + "," + lon;
-            restaurantEntities = restaurantEntities.stream().filter(r -> {
-                try {
-                    if(r.getLatitude()==null || r.getLongitude()==null)
-                        return false;
-                    String restaurantLatLong = r.getLatitude() + "," + r.getLongitude();
-                    Double distance = DistanceUtil.getDistanceInMiles(userLatLong, restaurantLatLong);
-                    return distance!=null && distance <= user.getDistancePreference();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return false;
-                }
-            }).collect(Collectors.toList());
-        }
-
         // Rating filter
         if(user.getMinimumRating() != null)
             restaurantEntities = restaurantEntities.stream().filter(r -> r.getHasRating()!=null && r.getHasRating().getRating() >= user.getMinimumRating().getRatingEntity().getRating()).collect(Collectors.toList());
@@ -111,6 +94,23 @@ public class RestaurantService implements IRestaurantService {
 
         if(strictAlcoholPreference != null)
             restaurantEntities = restaurantEntities.stream().filter(r -> r.getHasAlcohol()!=null && r.getHasAlcohol().getId().equals(strictAlcoholPreference.getAlcoholEntity().getId())).collect(Collectors.toList());
+
+        // Distance filtering
+        if(lat!=null && lon!=null && user.getDistancePreference()!=null) {
+            String userLatLong = lat + "," + lon;
+            restaurantEntities = restaurantEntities.stream().filter(r -> {
+                try {
+                    if(r.getLatitude()==null || r.getLongitude()==null)
+                        return false;
+                    String restaurantLatLong = r.getLatitude() + "," + r.getLongitude();
+                    Double distance = DistanceUtil.getDistanceInMiles(userLatLong, restaurantLatLong);
+                    return distance!=null && distance <= user.getDistancePreference();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }).collect(Collectors.toList());
+        }
 
         return restaurantEntities.stream()
                 .map(r -> RestaurantMapper.convertToUserDTO(r, likedRestaurants, null, calculateCosineSimilarity(createCosineForUser(user), createCosineForRestaurant(user, r))))
