@@ -27,6 +27,7 @@ export function LikedRestTab(){
     const [restaurants, setRestaurants] = React.useState([])
     const [user, setUser] = React.useState("");
     const [error, setError] = React.useState(false);
+    const [selectedItems, setSelectedItems] = React.useState([]);
 
 
     const handleSubmit = async (event) => {
@@ -83,6 +84,7 @@ export function LikedRestTab(){
         </form>
         <RestPropertyFilterTable
         data={restaurants}
+        selectedItems={selectedItems}
         loadHelpPanelContent={() => {
         setToolsOpen(true);
         appLayout.current?.focusToolsClose();

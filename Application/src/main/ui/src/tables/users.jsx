@@ -59,7 +59,6 @@ const FullPageHeader = ({
     ...props
   }) => {
     const isOnlyOneSelected = props.selectedItems.length === 1;
-  
     return (
       <TableHeader
         variant="awsui-h1-sticky"

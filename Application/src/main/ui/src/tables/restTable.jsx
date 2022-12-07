@@ -163,6 +163,7 @@ export function RestPropertyFilterTable({
   preferences,
   setPreferences,
   filteringProperties,
+  selectedItems, onSelectionChange, onLike
 }) {
   const { items, actions, filteredItemsCount, collectionProps, paginationProps, propertyFilterProps } = useCollection(
     data,
@@ -187,6 +188,8 @@ export function RestPropertyFilterTable({
   return (
     <Table
       {...collectionProps}
+      selectedItems={selectedItems}
+      onSelectionChange={onSelectionChange}
       items={items}
       columnDefinitions={columnDefinitions}
       visibleColumns={preferences.visibleContent}
@@ -197,6 +200,7 @@ export function RestPropertyFilterTable({
       resizableColumns={true}
       wrapLines={preferences.wrapLines}
       onColumnWidthsChange={saveWidths}
+      /*
       header={
         <FullPageHeader
           selectedItems={collectionProps.selectedItems}
@@ -204,7 +208,25 @@ export function RestPropertyFilterTable({
           loadHelpPanelContent={loadHelpPanelContent}
           serverSide={false}
         />
+      }*/
+      ///*
+      header={
+        <TableHeader
+          variant="awsui-h1-sticky"
+          title="Restaurants"
+          totalItems={data}
+          selectedItems={collectionProps.selectedItems}
+          actionButtons={
+            <SpaceBetween size="xs" direction="horizontal">
+              <Button disabled={selectedItems.length === 0} onClick={onLike}>
+                Like
+              </Button>
+            </SpaceBetween>
+          }
+          
+        />
       }
+      //*/
       loadingText="Loading Restaurants"
       filter={
         <PropertyFilter

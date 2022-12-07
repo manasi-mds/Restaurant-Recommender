@@ -35,6 +35,7 @@ export function GetFollowersTab(){
     const [followers, setFollowers] = React.useState([]);
     const [error, setError] = React.useState(false);
     const [restaurants, setRestaurants] = React.useState([])
+    const [selectedItems, setSelectedItems] = React.useState([]);
 
     const handleSubmit = async (event) => {
     event.preventDefault();
@@ -84,7 +85,33 @@ export function GetFollowersTab(){
             }
         }
     }
+    const onLikeConfirm = (event) => {
+        console.log("User: ", user);
+        console.log("selectedItems: ", selectedItems);
 
+        if(selectedItems.length >0){
+            for(var likes = 0; likes < selectedItems.length; likes++){
+                try{
+                    event.preventDefault();
+                    fetch('/user/likeRestaurant/' + user + '/' + selectedItems[likes].id + "?like=true", {
+                    method: 'PUT',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                    })
+                    .then(response => response.json())
+                    .then(response => console.log(JSON.stringify(response)))
+                }
+                catch (e) {
+                    console.error(e);
+                }
+            }
+        }
+        
+        setRestaurants(restaurants.filter(d => !selectedItems.includes(d)));
+        setSelectedItems([]);
+    };
     return(
         <Box>
             <form onSubmit={handleSubmit}>
@@ -128,15 +155,18 @@ export function GetFollowersTab(){
             </form>
             <RecRestPropertyFilterTable
             data={restaurants}
+            selectedItems={selectedItems}
+            onSelectionChange={event => setSelectedItems(event.detail.selectedItems)}
             loadHelpPanelContent={() => {
-            setToolsOpen(true);
-            appLayout.current?.focusToolsClose();
+                setToolsOpen(true);
+                appLayout.current?.focusToolsClose();
             }}
             columnDefinitions={restColumnDefinitions}
             saveWidths={restSaveWidths}
             preferences={restPreferences}
             setPreferences={restSetPreferences}
             filteringProperties={REC_REST_FILTERING_PROPERTIES}
+            onLike={onLikeConfirm}
             />
         </Box>
     

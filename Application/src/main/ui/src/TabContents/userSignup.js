@@ -9,16 +9,10 @@ import {
 } from "@cloudscape-design/components";
 
 import { 
-
-    RadioGroup, 
     FormControl, 
-    FormControlLabel, 
-    FormLabel, 
-    Radio, 
     Button, 
     FormHelperText
-    } 
-    from '@mui/material';
+} from '@mui/material';
 
 export function UserSignup(){
   /* Collection Hooks */

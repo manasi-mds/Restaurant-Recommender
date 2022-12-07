@@ -54,28 +54,6 @@ const TableHeader = props => {
     );
   };
 
-const FullPageHeader = ({
-    resourceName = 'Restaurants',
-    ...props
-  }) => {
-    const isOnlyOneSelected = props.selectedItems.length === 1;
-  
-    return (
-      <TableHeader
-        variant="awsui-h1-sticky"
-        title={resourceName}
-        actionButtons={
-          <SpaceBetween size="xs" direction="horizontal">
-            <Button disabled={!isOnlyOneSelected}>View details</Button>
-            <Button disabled={props.selectedItems.length === 0}>Use this for likes</Button>
-            <Button disabled={props.selectedItems.length === 0}>Use this for dislikes</Button>
-          </SpaceBetween>
-        }
-        {...props}
-      />
-    );
-  };
-
 const TableNoMatchState = props => (
     <Box margin={{ vertical: 'xs' }} textAlign="center" color="inherit">
       <SpaceBetween size="xxs">
@@ -164,6 +142,7 @@ export function RecRestPropertyFilterTable({
   preferences,
   setPreferences,
   filteringProperties,
+  selectedItems, onSelectionChange, onLike
 }) {
   const { items, actions, filteredItemsCount, collectionProps, paginationProps, propertyFilterProps } = useCollection(
     data,
@@ -188,6 +167,8 @@ export function RecRestPropertyFilterTable({
   return (
     <Table
       {...collectionProps}
+      selectedItems={selectedItems}
+      onSelectionChange={onSelectionChange}
       items={items}
       columnDefinitions={columnDefinitions}
       visibleColumns={preferences.visibleContent}
@@ -199,11 +180,19 @@ export function RecRestPropertyFilterTable({
       wrapLines={preferences.wrapLines}
       onColumnWidthsChange={saveWidths}
       header={
-        <FullPageHeader
-          selectedItems={collectionProps.selectedItems}
+        <TableHeader
+          variant="awsui-h1-sticky"
+          title="Restaurants"
           totalItems={data}
-          loadHelpPanelContent={loadHelpPanelContent}
-          serverSide={false}
+          selectedItems={collectionProps.selectedItems}
+          actionButtons={
+            <SpaceBetween size="xs" direction="horizontal">
+              <Button disabled={selectedItems.length === 0} onClick={onLike}>
+                Like
+              </Button>
+            </SpaceBetween>
+          }
+          
         />
       }
       loadingText="Loading Restaurants"
