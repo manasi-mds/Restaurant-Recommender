@@ -3,10 +3,10 @@ package com.dbproject.restaurantrecommender.services;
 import com.dbproject.restaurantrecommender.dto.RestaurantDTO;
 import com.dbproject.restaurantrecommender.dto.RestaurantUserDTO;
 import com.dbproject.restaurantrecommender.mapper.RestaurantMapper;
-import com.dbproject.restaurantrecommender.model.RestaurantEntity;
-import com.dbproject.restaurantrecommender.model.UserEntity;
+import com.dbproject.restaurantrecommender.model.*;
 import com.dbproject.restaurantrecommender.respsitory.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
+import org.neo4j.driver.internal.util.Preconditions;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -39,16 +39,54 @@ public class RestaurantService implements IRestaurantService {
     @Override
     public List<RestaurantUserDTO> getPreferredRestaurants(Long userId) {
         UserEntity user = userService.verifyUser(userId);
+        Set<Long> likedRestaurants = user.getLikedRestaurants().stream().map(lr -> lr.getRestaurantEntity().getId()).collect(Collectors.toSet());
+
+        Preconditions.checkArgument(user.getCuisinePreferences().size()>0 && user.getAmbiencePreferences().size()>0, "User has not set preferences");
+
         // Figure out strict filtering parameters
-        // filter out already disliked restaurants
-        // fetch restaurants based on those parameters ... if no strict filtering, all restaurants
+        Set<CuisinePreference> strictCuisinePreferences = user.getCuisinePreferences().stream().filter(cp -> isStrict(cp.getWeight())).collect(Collectors.toSet());
+        Set<AmbiencePreference> strictAmbiencePreferences = user.getAmbiencePreferences().stream().filter(ap -> isStrict(ap.getWeight())).collect(Collectors.toSet());
+        WifiPreference strictWifiPreference = user.getWifiPreference() != null && isStrict(user.getWifiPreference().getWeight()) ? user.getWifiPreference() : null;
+        CreditCardPreference strictCreditCardPreference = user.getCreditCardPreference() != null && isStrict(user.getCreditCardPreference().getWeight()) ? user.getCreditCardPreference() : null;
+        OutdoorSeatingPreference strictOutdoorSeatingPreference = user.getOutdoorSeatingPreference() != null && isStrict(user.getOutdoorSeatingPreference().getWeight()) ? user.getOutdoorSeatingPreference() : null;
+        AlcoholPreference strictAlcoholPreference = user.getAlcoholPreference() != null && isStrict(user.getAlcoholPreference().getWeight()) ? user.getAlcoholPreference() : null;
+        RatingPreference strictRatingPreference = user.getMinimumRating() != null && isStrict(user.getMinimumRating().getWeight()) ? user.getMinimumRating() : null;
 
-        // cosine similarity - ordering based on that
-        ArrayList<Double> userVector = createCosineForUser(user);
+        // Initial selection
+        List<RestaurantEntity> restaurantEntities;
+        restaurantEntities = strictCuisinePreferences.isEmpty() ? restaurantRepository.findAll():
+                restaurantRepository.findByHasCuisines(strictCuisinePreferences.stream().map(CuisinePreference::getCuisineEntity).collect(Collectors.toSet()));
 
-        // we will get the liked
-        // return dto :)
-        return null;
+        // Remove closed restaurants
+        restaurantEntities = restaurantEntities.stream().filter(RestaurantEntity::isOpen).collect(Collectors.toList());
+
+        // Filter out already disliked restaurants
+        Set<RestaurantEntity> dislikedRestaurants = user.getDislikedRestaurants().stream().map(DislikeRestaurant::getRestaurantEntity).collect(Collectors.toSet());
+        restaurantEntities.removeAll(dislikedRestaurants); // TODO: test, might not work
+
+        // TODO: test, might not work
+        for(AmbiencePreference ap : strictAmbiencePreferences) {
+            restaurantEntities = restaurantEntities.stream().filter(r -> r.getHasAmbiences().contains(ap.getAmbienceEntity())).collect(Collectors.toList());
+        }
+        if(strictWifiPreference != null) {
+            restaurantEntities = restaurantEntities.stream().filter(r -> r.getHasWifi()!=null && r.getHasWifi().getType().equals(strictWifiPreference.getWifi().getType())).collect(Collectors.toList());
+        }
+        if(strictCreditCardPreference != null) {
+            restaurantEntities = restaurantEntities.stream().filter(r -> r.getAcceptsCreditCard()!=null && r.getAcceptsCreditCard().getId().equals(strictCreditCardPreference.getCreditCardEntity().getId())).collect(Collectors.toList());
+        }
+        if(strictOutdoorSeatingPreference != null) {
+            restaurantEntities = restaurantEntities.stream().filter(r -> r.getHasOutdoorSeating()!=null && r.getHasOutdoorSeating().getId().equals(strictOutdoorSeatingPreference.getOutdoorSeatingEntity().getId())).collect(Collectors.toList());
+        }
+        if(strictAlcoholPreference != null) {
+            restaurantEntities = restaurantEntities.stream().filter(r -> r.getHasAlcohol()!=null && r.getHasAlcohol().getId().equals(strictAlcoholPreference.getAlcoholEntity().getId())).collect(Collectors.toList());
+        }
+        if(strictRatingPreference != null) {
+            restaurantEntities = restaurantEntities.stream().filter(r -> r.getHasRating().getRating() >= strictRatingPreference.getRatingEntity().getRating()).collect(Collectors.toList());
+        }
+
+        return restaurantEntities.stream()
+                .map(r -> RestaurantMapper.convertToUserDTO(r, likedRestaurants, null, calculateCosineSimilarity(createCosineForUser(user), createCosineForRestaurant(user, r))))
+                .sorted(Comparator.comparing(RestaurantUserDTO::getCosineSimilarity, Comparator.reverseOrder())).toList();
     }
 
     private ArrayList<Double> createCosineForUser(UserEntity user) {
@@ -59,8 +97,12 @@ public class RestaurantService implements IRestaurantService {
         return null;
     }
 
-    private double calculateCosineSimilarity(ArrayList<Double> userVector, ArrayList<Double> restaurantVector) {
-        return 0;
+    private Double calculateCosineSimilarity(ArrayList<Double> userVector, ArrayList<Double> restaurantVector) {
+        return null;
+    }
+
+    boolean isStrict(Integer weight){
+        return weight == 5;
     }
 
 }
