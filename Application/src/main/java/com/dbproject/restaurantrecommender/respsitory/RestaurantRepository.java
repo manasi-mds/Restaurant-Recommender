@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface RestaurantRepository extends Neo4jRepository<RestaurantEntity, Long> {
-    @Query("MATCH (n:Cuisine) where id(n)=$cuisineId return n")
+    @Query("MATCH (m)-[:HAS_CUISINE]->(n:Cuisine) where id(n)=$cuisineId return m")
     List<RestaurantEntity> havingACuisine(Long cuisineId);
 }

@@ -1,5 +1,6 @@
 package com.dbproject.restaurantrecommender.services;
 
+import com.dbproject.restaurantrecommender.DistanceUtil;
 import com.dbproject.restaurantrecommender.dto.RestaurantDTO;
 import com.dbproject.restaurantrecommender.dto.RestaurantUserDTO;
 import com.dbproject.restaurantrecommender.enums.WifiType;
@@ -42,7 +43,7 @@ public class RestaurantService implements IRestaurantService {
     }
 
     @Override
-    public List<RestaurantUserDTO> getPreferredRestaurants(Long userId) {
+    public List<RestaurantUserDTO> getPreferredRestaurants(Long userId, Double lat, Double lon) {
         UserEntity user = userService.verifyUser(userId);
         Set<Long> likedRestaurants = user.getLikedRestaurants().stream().map(lr -> lr.getRestaurantEntity().getId()).collect(Collectors.toSet());
         Preconditions.checkArgument(user.getCuisinePreferences().size()>0 && user.getAmbiencePreferences().size()>0, "User has not set preferences");
@@ -67,6 +68,23 @@ public class RestaurantService implements IRestaurantService {
         }
         restaurantEntities = new HashSet<>(restaurantEntities).stream().toList();
 
+        // Distance filtering
+        if(lat!=null && lon!=null && user.getDistancePreference()!=null) {
+            String userLatLong = lat + "," + lon;
+            restaurantEntities = restaurantEntities.stream().filter(r -> {
+                try {
+                    if(r.getLatitude()==null || r.getLongitude()==null)
+                        return false;
+                    String restaurantLatLong = r.getLatitude() + "," + r.getLongitude();
+                    Double distance = DistanceUtil.getDistanceInMiles(userLatLong, restaurantLatLong);
+                    return distance!=null && distance <= user.getDistancePreference();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }).collect(Collectors.toList());
+        }
+
         // Rating filter
         if(user.getMinimumRating() != null)
             restaurantEntities = restaurantEntities.stream().filter(r -> r.getHasRating().getRating() >= user.getMinimumRating().getRatingEntity().getRating()).collect(Collectors.toList());
@@ -76,7 +94,6 @@ public class RestaurantService implements IRestaurantService {
 
         // Filter out already disliked restaurants
         Set<Long> dislikedRestaurants = user.getDislikedRestaurants().stream().map(dr -> dr.getRestaurantEntity().getId()).collect(Collectors.toSet());
-
 
         restaurantEntities = restaurantEntities.stream().filter(r-> !dislikedRestaurants.contains(r.getId())).collect(Collectors.toList()); // TODO: test, might not work
 

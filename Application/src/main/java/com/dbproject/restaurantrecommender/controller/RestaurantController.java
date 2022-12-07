@@ -5,10 +5,7 @@ import com.dbproject.restaurantrecommender.api.ResponseGenerator;
 import com.dbproject.restaurantrecommender.services.IRestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.neo4j.driver.internal.util.Preconditions;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/restaurant")
@@ -24,7 +21,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/getPreferredRestaurants/{userId}")
-    ResponseBody getPreferredRestaurants(@PathVariable Long userId) {
-        return ResponseGenerator.createSuccessResponse(restaurantService.getPreferredRestaurants(userId));
+    ResponseBody getPreferredRestaurants(@PathVariable Long userId, @RequestParam Double lat, @RequestParam Double lon) {
+        return ResponseGenerator.createSuccessResponse(restaurantService.getPreferredRestaurants(userId, lat, lon));
     }
 }
