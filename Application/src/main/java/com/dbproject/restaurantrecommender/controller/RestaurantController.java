@@ -21,7 +21,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/getPreferredRestaurants/{userId}")
-    ResponseBody getPreferredRestaurants(@PathVariable Long userId, @RequestParam Double lat, @RequestParam Double lon) {
+    ResponseBody getPreferredRestaurants(@PathVariable Long userId, @RequestParam(required = false) Double lat, @RequestParam(required = false) Double lon) {
         return ResponseGenerator.createSuccessResponse(restaurantService.getPreferredRestaurants(userId, lat, lon));
     }
 }
