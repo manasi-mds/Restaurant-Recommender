@@ -7,7 +7,6 @@ import com.dbproject.restaurantrecommender.dto.UserPreferenceDTO;
 import com.dbproject.restaurantrecommender.services.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.neo4j.driver.internal.util.Preconditions;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,13 +26,12 @@ public class UserController {
         return ResponseGenerator.createSuccessResponse(userService.getAllUsers());
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/{userId}/followedUsers")
     ResponseBody getFollowedUsers(@PathVariable Long userId) {
         return ResponseGenerator.createSuccessResponse(userService.getFollowedUsers(userId));
     }
 
     @PutMapping("/{userId}/follow/{followUserId}")
-    @Transactional
     ResponseBody followUser(@PathVariable Long userId, @PathVariable Long followUserId, @RequestParam Boolean follow) {
         Preconditions.checkArgument(follow != null, "Follow parameter is required");
         userService.followUser(userId, followUserId, follow);
@@ -46,6 +44,14 @@ public class UserController {
         Preconditions.checkArgument(like != null, "Query param like cannot be null");
         userService.likeRestaurant(userId, restaurantId, like);
         String likedOrNot = like ? "liked" : "unliked";
+        return ResponseGenerator.createSuccessResponse("Successfully "+likedOrNot+" the restaurant "+ restaurantId);
+    }
+
+    @PutMapping("/dislikeRestaurant/{userId}/{restaurantId}")
+    ResponseBody dislikeRestaurant(@PathVariable Long userId, @PathVariable Long restaurantId, @RequestParam Boolean dislike) {
+        Preconditions.checkArgument(dislike != null, "Query param like cannot be null");
+        userService.dislikeRestaurant(userId, restaurantId, dislike);
+        String likedOrNot = dislike ? "disliked" : "un-disliked";
         return ResponseGenerator.createSuccessResponse("Successfully "+likedOrNot+" the restaurant "+ restaurantId);
     }
 

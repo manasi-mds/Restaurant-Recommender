@@ -6,10 +6,7 @@ import org.neo4j.driver.internal.util.Preconditions;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 import static org.springframework.data.neo4j.core.schema.Relationship.Direction.OUTGOING;
 
@@ -48,26 +45,25 @@ public class UserEntity extends BaseEntity{
     @Relationship(type = "LIKE_RESTAURANT", direction = OUTGOING)
     Set<LikeRestaurant> likedRestaurants =  new HashSet<>();
 
+    @Relationship(type = "DISLIKE_RESTAURANT", direction = OUTGOING)
+    Set<DislikeRestaurant> dislikedRestaurants =  new HashSet<>();
+
     public void followUser(UserEntity user2, Boolean follow) {
         if(this.following==null)
             this.following = new HashSet<>();
 
         if(follow) {
-//            System.out.println("User "+this.name+" is following "+user2.name);
-//            System.out.println(this.following.stream().map(UserEntity::getName).toList());
-            //Preconditions.checkArgument(!this.following.contains(user2), "User "+this.name+" is already following "+user2.name);
-//            Preconditions.checkArgument(!this.following.stream().map(UserEntity::getId).collect(Collectors.toSet()).contains(user2.getId()), "User is already following " + user2.getName());
+            Preconditions.checkArgument(this.following.stream().noneMatch(fu-> Objects.equals(fu.getUserEntity().getId(), user2.getId())), "Already following user " + user2.getName());
             FollowUser followUser = new FollowUser();
             followUser.setUserEntity(user2);
             this.following.add(followUser);
+        } else {
+            Optional<FollowUser> user2Follow = this.following.stream()
+                    .filter(followUser -> followUser.getUserEntity().getId().equals(user2.getId()))
+                    .findAny();
+            Preconditions.checkArgument(user2Follow.isPresent(), "Not following user " + user2.getName());
+            this.following.remove(user2Follow.get());
         }
-//        } else {
-////            Preconditions.checkArgument(this.following.contains(user2), "User "+this.name+" is not following "+user2.name);
-//            //Preconditions.checkArgument(this.following.stream().map(UserEntity::getId).collect(Collectors.toSet()).contains(user2.getId()), "User is not following " + user2.getName());
-////            FollowUser followUser = new FollowUser();
-////            followUser.setUserEntity(user2);
-////            this.following.remove(followUser);
-//        }
     }
 
     public void likeRestaurant(RestaurantEntity restaurant, boolean like) {
@@ -75,13 +71,34 @@ public class UserEntity extends BaseEntity{
             this.likedRestaurants = new HashSet<>();
 
         if(like) {
-            //Preconditions.checkArgument(!this.likedRestaurants.stream().map(RestaurantEntity::getId).collect(Collectors.toSet()).contains(restaurant.getId()), "User has already liked " + restaurant.getName());
+            Preconditions.checkArgument(this.likedRestaurants.stream().noneMatch(lr -> lr.getRestaurantEntity().getId().equals(restaurant.getId())), "Already liked restaurant " + restaurant.getName());
             LikeRestaurant likeRestaurant = new LikeRestaurant();
             likeRestaurant.setRestaurantEntity(restaurant);
             this.likedRestaurants.add(likeRestaurant);
         } else {
-            //Preconditions.checkArgument(this.likedRestaurants.stream().map(RestaurantEntity::getId).collect(Collectors.toSet()).contains(restaurant.getId()), "User has not liked " + restaurant.getName());
-            //this.likedRestaurants.remove(restaurant);
+            Optional<LikeRestaurant> likedRest = this.likedRestaurants.stream()
+                    .filter(user -> user.getRestaurantEntity().getId().equals(restaurant.getId()))
+                    .findAny();
+            Preconditions.checkArgument(likedRest.isPresent(), "Does not already like restaurant " + restaurant.getId() );
+            this.likedRestaurants.remove(likedRest.get());
+        }
+    }
+
+    public void dislikeRestaurant(RestaurantEntity restaurant, boolean dislike) {
+        if(this.dislikedRestaurants==null)
+            this.dislikedRestaurants = new HashSet<>();
+
+        if(dislike) {
+            Preconditions.checkArgument(this.dislikedRestaurants.stream().noneMatch(lr -> lr.getRestaurantEntity().getId().equals(restaurant.getId())), "Already disliked restaurant " + restaurant.getName());
+            DislikeRestaurant dislikeRestaurant = new DislikeRestaurant();
+            dislikeRestaurant.setRestaurantEntity(restaurant);
+            this.dislikedRestaurants.add(dislikeRestaurant);
+        } else {
+            Optional<DislikeRestaurant> dislikedRest = this.dislikedRestaurants.stream()
+                    .filter(user -> user.getRestaurantEntity().getId().equals(restaurant.getId()))
+                    .findAny();
+            Preconditions.checkArgument(dislikedRest.isPresent(), "Does not already like restaurant " + restaurant.getId() );
+            this.dislikedRestaurants.remove(dislikedRest.get());
         }
     }
 

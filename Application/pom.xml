@@ -49,6 +49,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
+<<<<<<< HEAD
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
         <dependency>
@@ -56,7 +57,13 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.12.0</version>
         </dependency>
+<<<<<<< HEAD
          <dependency>
+=======
+
+=======
+        <dependency>
+>>>>>>> main
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-rest</artifactId>
 		</dependency>
@@ -64,6 +71,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+<<<<<<< HEAD
+=======
+>>>>>>> b10f11c (Initial commit of the UI, edited pom to get react working with maven, set up basic frontend elements that will get integrated with the proper APIs once the backend is fully set up (namely submission form, radio buttons, selects, and table for displaying results from GET.)
+>>>>>>> main
     </dependencies>
 
     <build>
