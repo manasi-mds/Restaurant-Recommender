@@ -4,6 +4,8 @@ import com.dbproject.restaurantrecommender.dto.RestaurantDTO;
 import com.dbproject.restaurantrecommender.dto.RestaurantUserDTO;
 import com.dbproject.restaurantrecommender.model.RestaurantEntity;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,7 +36,7 @@ public class RestaurantMapper {
         restaurantDTO.setIsOutdoorSeatingAvailable(restaurantEntity.getHasOutdoorSeating() == null ? null : restaurantEntity.getHasOutdoorSeating().isOutdoorSeatingAvailable());
         return restaurantDTO;
     }
-    public static RestaurantUserDTO convertToUserDTO(RestaurantEntity restaurantEntity, Set<Long> likedRestaurants, Set<Long> dislikedRestaurants, Double cosineSimilarity) {
+    public static RestaurantUserDTO convertToUserDTO(RestaurantEntity restaurantEntity, Set<Long> likedRestaurants, Set<Long> dislikedRestaurants, Double cosineSimilarity, HashMap<Long, Double> distanceMap) {
         RestaurantUserDTO restaurantDTO = new RestaurantUserDTO();
         restaurantDTO.setId(restaurantEntity.getId());
         restaurantDTO.setName(restaurantEntity.getName());
@@ -58,8 +60,10 @@ public class RestaurantMapper {
         restaurantDTO.setIsCreditCardAccepted(restaurantEntity.getAcceptsCreditCard() == null ? null : restaurantEntity.getAcceptsCreditCard().isCreditCardAccepted());
         restaurantDTO.setIsOpen(restaurantEntity.isOpen());
         restaurantDTO.setIsOutdoorSeatingAvailable(restaurantEntity.getHasOutdoorSeating() == null ? null : restaurantEntity.getHasOutdoorSeating().isOutdoorSeatingAvailable());
-        // TODO : add liked and disliked
+        if(likedRestaurants!=null && likedRestaurants.contains(restaurantEntity.getId())) restaurantDTO.setIsLiked(true);
+        if(dislikedRestaurants!=null && dislikedRestaurants.contains(restaurantEntity.getId())) restaurantDTO.setIsDisliked(true);
         restaurantDTO.setCosineSimilarity(cosineSimilarity);
+        if(distanceMap!=null && distanceMap.containsKey(restaurantEntity.getId())) restaurantDTO.setDistance(distanceMap.get(restaurantEntity.getId()));
         return restaurantDTO;
     }
 }

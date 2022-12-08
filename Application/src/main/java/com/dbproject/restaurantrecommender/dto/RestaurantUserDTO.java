@@ -28,4 +28,5 @@ public class RestaurantUserDTO {
     Boolean isLiked;
     Boolean isDisliked;
     Double cosineSimilarity;
+    Double distance;
 }

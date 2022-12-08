@@ -28,13 +28,11 @@ public class RestaurantService implements IRestaurantService {
 
     @Override
     public List<RestaurantUserDTO> getAllRestaurants(Long userId) {
-        // TODO: verify the user
-        // we will get the liked and disliked
-        // set -> like and dislike - two sets
-        Set<Long> likedRestaurants = new HashSet<>();
-        Set<Long> dislikedRestaurants = new HashSet<>();
+        UserEntity user = userService.verifyUser(userId);
+        Set<Long> likedRestaurants = user.getLikedRestaurants().stream().map(lr-> lr.getRestaurantEntity().getId()).collect(Collectors.toSet());
+        Set<Long> dislikedRestaurants = user.getDislikedRestaurants().stream().map(lr-> lr.getRestaurantEntity().getId()).collect(Collectors.toSet());
         List<RestaurantEntity> restaurantEntities = restaurantRepository.findAll();
-        return restaurantEntities.stream().map(r-> RestaurantMapper.convertToUserDTO(r, likedRestaurants, dislikedRestaurants, null)).collect(Collectors.toList());
+        return restaurantEntities.stream().map(r-> RestaurantMapper.convertToUserDTO(r, likedRestaurants, dislikedRestaurants, null, null)).collect(Collectors.toList());
     }
 
     @Override
@@ -90,6 +88,7 @@ public class RestaurantService implements IRestaurantService {
             restaurantEntities = restaurantEntities.stream().filter(r -> r.getHasAlcohol()!=null && r.getHasAlcohol().getId().equals(strictAlcoholPreference.getAlcoholEntity().getId())).collect(Collectors.toList());
 
         // Distance filtering
+        HashMap<Long, Double> restaurantDistance = new HashMap<>();
         if(lat!=null && lon!=null && user.getDistancePreference()!=null) {
             String userLatLong = lat + "," + lon;
             restaurantEntities = restaurantEntities.stream().filter(r -> {
@@ -98,6 +97,7 @@ public class RestaurantService implements IRestaurantService {
                         return false;
                     String restaurantLatLong = r.getLatitude() + "," + r.getLongitude();
                     Double distance = DistanceUtil.getDistanceInMiles(userLatLong, restaurantLatLong);
+                    restaurantDistance.put(r.getId(), distance);
                     return distance!=null && distance <= user.getDistancePreference();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -107,8 +107,8 @@ public class RestaurantService implements IRestaurantService {
         }
 
         return restaurantEntities.stream()
-                .map(r -> RestaurantMapper.convertToUserDTO(r, likedRestaurants, null, calculateCosineSimilarity(createCosineForUser(user), createCosineForRestaurant(user, r))))
-                .sorted(Comparator.comparing(RestaurantUserDTO::getCosineSimilarity, Comparator.reverseOrder())).toList();
+                .map(r -> RestaurantMapper.convertToUserDTO(r, likedRestaurants, null, calculateCosineSimilarity(createCosineForUser(user), createCosineForRestaurant(user, r)), restaurantDistance))
+                .sorted(Comparator.comparing(RestaurantUserDTO::getCosineSimilarity, Comparator.reverseOrder()).thenComparing(RestaurantUserDTO::getDistance, Comparator.reverseOrder())).toList();
     }
 
     //1->0.2
