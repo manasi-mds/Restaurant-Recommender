@@ -76,6 +76,7 @@ public class UserEntity extends BaseEntity{
 
         if(like) {
             Preconditions.checkArgument(this.likedRestaurants.stream().noneMatch(lr -> lr.getRestaurantEntity().getId().equals(restaurant.getId())), "Already liked restaurant " + restaurant.getName());
+            Preconditions.checkArgument(this.dislikedRestaurants.stream().noneMatch(lr -> lr.getRestaurantEntity().getId().equals(restaurant.getId())), "User should first un-dislike the restaurant " + restaurant.getName());
             LikeRestaurant likeRestaurant = new LikeRestaurant();
             likeRestaurant.setRestaurantEntity(restaurant);
             this.likedRestaurants.add(likeRestaurant);
@@ -94,6 +95,7 @@ public class UserEntity extends BaseEntity{
 
         if(dislike) {
             Preconditions.checkArgument(this.dislikedRestaurants.stream().noneMatch(lr -> lr.getRestaurantEntity().getId().equals(restaurant.getId())), "Already disliked restaurant " + restaurant.getName());
+            Preconditions.checkArgument(this.likedRestaurants.stream().noneMatch(lr -> lr.getRestaurantEntity().getId().equals(restaurant.getId())), "User should first unlike the restaurant " + restaurant.getName());
             DislikeRestaurant dislikeRestaurant = new DislikeRestaurant();
             dislikeRestaurant.setRestaurantEntity(restaurant);
             this.dislikedRestaurants.add(dislikeRestaurant);
