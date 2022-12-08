@@ -1,6 +1,7 @@
 package com.dbproject.restaurantrecommender.services;
 
 import com.dbproject.restaurantrecommender.dto.RestaurantDTO;
+import com.dbproject.restaurantrecommender.dto.RestaurantUserDTO;
 import com.dbproject.restaurantrecommender.dto.UserDTO;
 import com.dbproject.restaurantrecommender.dto.UserPreferenceDTO;
 
@@ -16,6 +17,6 @@ public interface IUserService {
     List<RestaurantDTO> getLikedRestaurants(Long userId);
     List<UserDTO> getPotentialFriends(Long userId);
     List<UserPreferenceDTO> getPotentialFriendsPreferences(Long userId);
-    List<RestaurantDTO> getPotentialRestaurants(Long userId);
+    List<RestaurantUserDTO> getPotentialRestaurants(Long userId);
     void createPreference(Long userId, UserPreferenceDTO userPreferenceDTO);
 }

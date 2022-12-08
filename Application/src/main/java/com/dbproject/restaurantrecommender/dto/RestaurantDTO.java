@@ -25,6 +25,5 @@ public class RestaurantDTO {
     Boolean isCreditCardAccepted;
     Boolean isOpen;
     Boolean isOutdoorSeatingAvailable;
-    Boolean isLiked;
-    Boolean isDisliked;
+    Integer likeDislike;
 }

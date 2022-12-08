@@ -1,6 +1,7 @@
 package com.dbproject.restaurantrecommender.services;
 
 import com.dbproject.restaurantrecommender.dto.RestaurantDTO;
+import com.dbproject.restaurantrecommender.dto.RestaurantUserDTO;
 import com.dbproject.restaurantrecommender.dto.UserDTO;
 import com.dbproject.restaurantrecommender.dto.UserPreferenceDTO;
 import com.dbproject.restaurantrecommender.dto.preference.AmbiencePreferenceDTO;
@@ -132,11 +133,11 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<RestaurantDTO> getPotentialRestaurants(Long userId) {
+    public List<RestaurantUserDTO> getPotentialRestaurants(Long userId) {
         UserEntity user = verifyUser(userId);
         Set<UserEntity> friends = user.getFollowing().stream().map(FollowUser::getUserEntity).collect(Collectors.toSet());
         Set<RestaurantEntity> potentialRestaurants = friends.stream().map(friend-> friend.getLikedRestaurants().stream().map(LikeRestaurant::getRestaurantEntity).collect(Collectors.toSet())).flatMap(Collection::stream).collect(Collectors.toSet());
-        return potentialRestaurants.stream().map(RestaurantMapper::convert).toList();
+        return potentialRestaurants.stream().map(r-> RestaurantMapper.convertToUserDTO(r, user.getLikedRestaurants().stream().map(lr-> lr.getRestaurantEntity().getId()).collect(Collectors.toSet()), user.getDislikedRestaurants().stream().map(rr-> rr.getRestaurantEntity().getId()).collect(Collectors.toSet()), null, null)).toList();
     }
 
     @Override
