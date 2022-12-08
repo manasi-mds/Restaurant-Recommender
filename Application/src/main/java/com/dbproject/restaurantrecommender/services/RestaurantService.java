@@ -88,28 +88,34 @@ public class RestaurantService implements IRestaurantService {
         if(strictAlcoholPreference != null)
             restaurantEntities = restaurantEntities.stream().filter(r -> r.getHasAlcohol()!=null && r.getHasAlcohol().getId().equals(strictAlcoholPreference.getAlcoholEntity().getId())).collect(Collectors.toList());
 
-        // Distance filtering
+//        // Distance filtering
         HashMap<Long, Double> restaurantDistance = new HashMap<>();
-        if(lat!=null && lon!=null && user.getDistancePreference()!=null) {
-            String userLatLong = lat + "," + lon;
-            restaurantEntities = restaurantEntities.stream().filter(r -> {
-                try {
-                    if(r.getLatitude()==null || r.getLongitude()==null)
-                        return false;
-                    String restaurantLatLong = r.getLatitude() + "," + r.getLongitude();
-                    Double distance = DistanceUtil.getDistanceInMiles(userLatLong, restaurantLatLong);
-                    restaurantDistance.put(r.getId(), distance);
-                    return distance!=null && distance <= user.getDistancePreference();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return false;
-                }
-            }).collect(Collectors.toList());
-        }
+//        if(lat!=null && lon!=null && user.getDistancePreference()!=null) {
+//            String userLatLong = lat + "," + lon;
+//            restaurantEntities = restaurantEntities.stream().filter(r -> {
+//                try {
+//                    if(r.getLatitude()==null || r.getLongitude()==null)
+//                        return false;
+//                    String restaurantLatLong = r.getLatitude() + "," + r.getLongitude();
+//                    Double distance = DistanceUtil.getDistanceInMiles(userLatLong, restaurantLatLong);
+//                    restaurantDistance.put(r.getId(), distance);
+//                    return distance!=null && distance <= user.getDistancePreference();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    return false;
+//                }
+//            }).collect(Collectors.toList());
+//        }
+
+//        return restaurantEntities.stream()
+//                .map(r -> RestaurantMapper.convertToUserDTO(r, likedRestaurants, null, calculateCosineSimilarity(createCosineForUser(user), createCosineForRestaurant(user, r)), restaurantDistance))
+//                .sorted(Comparator.comparing(RestaurantUserDTO::getCosineSimilarity, Comparator.reverseOrder()).thenComparing(RestaurantUserDTO::getDistance, Comparator.reverseOrder())).toList();
+
+
 
         return restaurantEntities.stream()
                 .map(r -> RestaurantMapper.convertToUserDTO(r, likedRestaurants, null, calculateCosineSimilarity(createCosineForUser(user), createCosineForRestaurant(user, r)), restaurantDistance))
-                .sorted(Comparator.comparing(RestaurantUserDTO::getCosineSimilarity, Comparator.reverseOrder()).thenComparing(RestaurantUserDTO::getDistance, Comparator.reverseOrder())).toList();
+                .sorted(Comparator.comparing(RestaurantUserDTO::getCosineSimilarity, Comparator.reverseOrder())).toList();
     }
 
     //1->0.2

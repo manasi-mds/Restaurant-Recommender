@@ -93,44 +93,77 @@ public class UserService implements IUserService {
         return user.getLikedRestaurants().stream().map(lr -> RestaurantMapper.convert(lr.getRestaurantEntity())).toList();
     }
 
+//    @Override
+//    public List<UserDTO> getPotentialFriends(Long userId) {
+//        UserEntity user = verifyUser(userId);
+//        Set<Long> filteredUsers = user.getFollowing().stream().map(fu-> fu.getUserEntity().getId()).collect(Collectors.toSet());
+//        filteredUsers.add(user.getId());
+//
+//        Set<RestaurantEntity> likedRestaurants = user.getLikedRestaurants().stream().map(LikeRestaurant::getRestaurantEntity).collect(Collectors.toSet());
+//        // Set<Long> restaurantIds = likedRestaurants.stream().map(RestaurantDTO::getId).collect(Collectors.toSet());
+//
+//        Set<UserEntity> potentialFriends = new HashSet<>();
+//        for(RestaurantEntity r : likedRestaurants) {
+//            potentialFriends.addAll(r.getLikedBy());
+//        }
+//        // Set<UserEntity> potentialFriends = userRepository.getPotentialFriends(restaurantIds.stream().toList());
+//        potentialFriends.removeIf(pf-> filteredUsers.contains(pf.getId()));
+//        return potentialFriends.stream().map(UserMapper::convert).toList();
+//    }
+
     @Override
     public List<UserDTO> getPotentialFriends(Long userId) {
         UserEntity user = verifyUser(userId);
         Set<Long> filteredUsers = user.getFollowing().stream().map(fu-> fu.getUserEntity().getId()).collect(Collectors.toSet());
         filteredUsers.add(user.getId());
 
-        Set<RestaurantEntity> likedRestaurants = user.getLikedRestaurants().stream().map(LikeRestaurant::getRestaurantEntity).collect(Collectors.toSet());
-        // Set<Long> restaurantIds = likedRestaurants.stream().map(RestaurantDTO::getId).collect(Collectors.toSet());
+        List<RestaurantDTO> likedRestaurants = user.getLikedRestaurants().stream().map(lr -> RestaurantMapper.convert(lr.getRestaurantEntity())).toList();
+        Set<Long> restaurantIds = likedRestaurants.stream().map(RestaurantDTO::getId).collect(Collectors.toSet());
 
-        Set<UserEntity> potentialFriends = new HashSet<>();
-        for(RestaurantEntity r : likedRestaurants) {
-            potentialFriends.addAll(r.getLikedBy());
-        }
-        // Set<UserEntity> potentialFriends = userRepository.getPotentialFriends(restaurantIds.stream().toList());
+        Set<UserEntity> potentialFriends = userRepository.getPotentialFriends(restaurantIds.stream().toList());
+
         potentialFriends.removeIf(pf-> filteredUsers.contains(pf.getId()));
         return potentialFriends.stream().map(UserMapper::convert).toList();
     }
 
-    @Override
-    public List<UserPreferenceDTO> getPotentialFriendsPreferences(Long userId) {
-        UserEntity user = verifyUser(userId);
-        Set<Long> filteredUsers = user.getFollowing().stream().map(fu-> fu.getUserEntity().getId()).collect(Collectors.toSet());
-        filteredUsers.add(user.getId());
+//    @Override
+//    public List<UserDTO> getPotentialFriends(Long userId) {
+//        UserEntity user = verifyUser(userId);
+//        Set<Long> filteredUsers = user.getFollowing().stream().map(fu-> fu.getUserEntity().getId()).collect(Collectors.toSet());
+//        filteredUsers.add(user.getId());
+//
+//        Set<RestaurantEntity> likedRestaurants = user.getLikedRestaurants().stream().map(LikeRestaurant::getRestaurantEntity).collect(Collectors.toSet());
+//        // Set<Long> restaurantIds = likedRestaurants.stream().map(RestaurantDTO::getId).collect(Collectors.toSet());
+//
+//        Set<UserEntity> potentialFriends = new HashSet<>();
+//        for(RestaurantEntity r : likedRestaurants) {
+//            potentialFriends.addAll(r.getLikedBy());
+//        }
+//        // Set<UserEntity> potentialFriends = userRepository.getPotentialFriends(restaurantIds.stream().toList());
+//        potentialFriends.removeIf(pf-> filteredUsers.contains(pf.getId()));
+//        return potentialFriends.stream().map(UserMapper::convert).toList();
+//    }
 
-
-        Set<RestaurantEntity> likedRestaurants = user.getLikedRestaurants().stream().map(LikeRestaurant::getRestaurantEntity).collect(Collectors.toSet());
-        //Set<Long> restaurantIds = likedRestaurants.stream().map(RestaurantDTO::getId).collect(Collectors.toSet());
-
-        Set<UserEntity> potentialFriends = new HashSet<>();
-        for(RestaurantEntity r : likedRestaurants) {
-        	potentialFriends.addAll(r.getLikedBy());
-        }
+//    @Override
+//    public List<UserPreferenceDTO> getPotentialFriendsPreferences(Long userId) {
+//        UserEntity user = verifyUser(userId);
+//        Set<Long> filteredUsers = user.getFollowing().stream().map(fu-> fu.getUserEntity().getId()).collect(Collectors.toSet());
+//        filteredUsers.add(user.getId());
+//
+//
+//        Set<RestaurantEntity> likedRestaurants = user.getLikedRestaurants().stream().map(LikeRestaurant::getRestaurantEntity).collect(Collectors.toSet());
+//        //Set<Long> restaurantIds = likedRestaurants.stream().map(RestaurantDTO::getId).collect(Collectors.toSet());
+//
+//        Set<UserEntity> potentialFriends = new HashSet<>();
+//        for(RestaurantEntity r : likedRestaurants) {
+//        	potentialFriends.addAll(r.getLikedBy());
+//        }
 
 //        Set<UserEntity> potentialFriends = userRepository.getPotentialFriends(restaurantIds.stream().toList());
-        potentialFriends.removeIf(pf-> filteredUsers.contains(pf.getId()));
-
-        return potentialFriends.stream().map(UserPreferenceMapper::convert).toList();
-    }
+//        potentialFriends.removeIf(pf-> filteredUsers.contains(pf.getId()));
+//
+//        return potentialFriends.stream().map(UserPreferenceMapper::convert).toList();
+//    }
 
     @Override
     public List<RestaurantUserDTO> getPotentialRestaurants(Long userId) {
