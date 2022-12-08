@@ -4,7 +4,7 @@ import { addColumnSortLabels } from '../commons/labels';
 
 export const REC_REST_DEFAULT_PREFERENCES = {
   pageSize: 30,
-  visibleContent: ['recommender', 'name', 'address', 'cuisines', 'isAlcoholServed', 'rating','isOpen'],
+  visibleContent: ['recommender', 'name', 'address', 'cuisines', 'isAlcoholServed', 'rating','isOpen', 'likeDisliked'],
   wrapLines: false,
 };
 
@@ -15,6 +15,15 @@ export const REC_REST_COLUMN_DEFINITIONS = addColumnSortLabels([
     header: 'Recommender',
     cell: item => item.recommender,
     minWidth: 180,
+  },
+  {
+    id: 'likeDisliked',
+    sortingField: 'likeDisliked',
+    header: '(Dis)Liked',
+    cell: item => (
+      <StatusIndicator type={item.liked === 'Disliked' ? 'error' : 'success'}>{item.liked}</StatusIndicator>
+    ),
+    minWidth: 100,
   },
   {
     id: 'name',
@@ -81,6 +90,13 @@ export const PAGE_SIZE_OPTIONS = [
 ];
 
 export const REC_REST_FILTERING_PROPERTIES = [
+  {
+    propertyLabel: 'Liked or Disliked Name',
+    key: 'likeDisliked',
+    groupValuesLabel: 'Liked or Disliked',
+    operators: ['=', '!='],
+  },
+  
   {
     propertyLabel: 'Recommender Name',
     key: 'recommender',

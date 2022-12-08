@@ -71,6 +71,15 @@ export function GenRestTab(){
             for(var i = 0; i < data.data.length; i++){
                 data.data[i].isAlcoholServed = data.data[i].isAlcoholServed.toString();
                 data.data[i].isOpen = data.data[i].isOpen.toString();
+                if(data.data[i].likeDisliked == 0){
+                    data.data[i].likeDisliked = "Liked";
+                }
+                else if(data.data[i].likeDisliked == 2){
+                    data.data[i].likeDisliked = "Disliked";
+                }
+                else{
+                    data.data[i].likeDisliked = "Not Selected";
+                }
                 var cuisineList = "";
                 for(var j = 0; j < data.data[i].cuisines.length; j++){
                     cuisineList += data.data[i].cuisines[j].name;
