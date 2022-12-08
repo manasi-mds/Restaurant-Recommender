@@ -2,7 +2,7 @@ import * as React from "react";
 
 import {
     FormField,
-    Toggle,
+    ExpandableSection,
     Input,
     Box
     
@@ -145,6 +145,8 @@ export function GetFollowersTab(){
                 setPreferences={userSetPreferences}
                 filteringProperties={USER_FILTERING_PROPERTIES}
             />
+            <ExpandableSection headerText="Recommended Restaurants">
+
             <form onSubmit={handleSecondSubmit}>
                 <FormControl sx={{ m: 3 }} error={error} variant="standard">
                     <Button sx={{ mt: 1, mr: 1 }} type="submit" variant="outlined">
@@ -168,6 +170,8 @@ export function GetFollowersTab(){
             filteringProperties={REC_REST_FILTERING_PROPERTIES}
             onLike={onLikeConfirm}
             />
+        </ExpandableSection>
+
         </Box>
     
   )

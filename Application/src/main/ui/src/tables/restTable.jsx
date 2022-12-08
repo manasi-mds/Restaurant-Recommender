@@ -54,28 +54,6 @@ const TableHeader = props => {
     );
   };
 
-const FullPageHeader = ({
-    resourceName = 'Restaurants',
-    ...props
-  }) => {
-    const isOnlyOneSelected = props.selectedItems.length === 1;
-  
-    return (
-      <TableHeader
-        variant="awsui-h1-sticky"
-        title={resourceName}
-        actionButtons={
-          <SpaceBetween size="xs" direction="horizontal">
-            <Button disabled={!isOnlyOneSelected}>View details</Button>
-            <Button disabled={props.selectedItems.length === 0}>Use this for likes</Button>
-            <Button disabled={props.selectedItems.length === 0}>Use this for dislikes</Button>
-          </SpaceBetween>
-        }
-        {...props}
-      />
-    );
-  };
-
 const TableNoMatchState = props => (
     <Box margin={{ vertical: 'xs' }} textAlign="center" color="inherit">
       <SpaceBetween size="xxs">

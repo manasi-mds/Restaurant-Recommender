@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 export function SimpleMap(lati, longi){
+const[lat, setLat] = React.useState(lati);
+const[long, setLong] = React.useState(longi);
 
 const Wrapper = styled.div`
 position: absolute;
@@ -25,13 +27,9 @@ cursor: ${(props) => (props.onClick ? 'pointer' : 'default')};
 const Marker = ({ text, onClick }) => (
 <Wrapper
   alt={text}
-  //onClick={onClick}
+  onClick={ev => {console.log(text)}}
 />
 );
-
-//Marker.defaultProps = {
-//onClick: console.log("Hello World"),
-//};
 
 Marker.propTypes = {
 onClick: PropTypes.func,
@@ -51,7 +49,10 @@ text: PropTypes.string.isRequired,
       <GoogleMapReact
           onClick={ev => {
             console.log("latitide = ", ev.lat);
+            setLat(ev.lat);
             console.log("longitude = ", ev.lng);
+            setLong(ev.lng);
+
           }}
         bootstrapURLKeys={{ key: "AIzaSyBJPrEYIojDH_794kMGjcDrTzihHa6HvwY" }}
         defaultCenter={defaultProps.center}
@@ -61,8 +62,8 @@ text: PropTypes.string.isRequired,
                 <Marker
                 key="Name"
                 text="text"
-                lat={lati}
-                lng={longi}
+                lat={lat}
+                lng={long}
               />
       </GoogleMapReact>
     </div>

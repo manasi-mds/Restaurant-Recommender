@@ -64,7 +64,7 @@ export function GenRestTab(){
         event.preventDefault();
         try {
             const response = await fetch(
-                '/restaurant'
+                '/restaurant/'+user
             );
             const data = await response.json();
             
