@@ -1,6 +1,7 @@
 package com.dbproject.restaurantrecommender.services;
 
 import com.dbproject.restaurantrecommender.DistanceUtil;
+import com.dbproject.restaurantrecommender.dto.AmbienceDTO;
 import com.dbproject.restaurantrecommender.dto.RestaurantDTO;
 import com.dbproject.restaurantrecommender.dto.RestaurantUserDTO;
 import com.dbproject.restaurantrecommender.enums.WifiType;
@@ -27,13 +28,11 @@ public class RestaurantService implements IRestaurantService {
 
     @Override
     public List<RestaurantUserDTO> getAllRestaurants(Long userId) {
-        // TODO: verify the user
-        // we will get the liked and disliked
-        // set -> like and dislike - two sets
-        Set<Long> likedRestaurants = new HashSet<>();
-        Set<Long> dislikedRestaurants = new HashSet<>();
+        UserEntity user = userService.verifyUser(userId);
+        Set<Long> likedRestaurants = user.getLikedRestaurants().stream().map(lr-> lr.getRestaurantEntity().getId()).collect(Collectors.toSet());
+        Set<Long> dislikedRestaurants = user.getDislikedRestaurants().stream().map(lr-> lr.getRestaurantEntity().getId()).collect(Collectors.toSet());
         List<RestaurantEntity> restaurantEntities = restaurantRepository.findAll();
-        return restaurantEntities.stream().map(r-> RestaurantMapper.convertToUserDTO(r, likedRestaurants, dislikedRestaurants, null)).collect(Collectors.toList());
+        return restaurantEntities.stream().map(r-> RestaurantMapper.convertToUserDTO(r, likedRestaurants, dislikedRestaurants, null, null)).collect(Collectors.toList());
     }
 
     @Override
@@ -57,16 +56,7 @@ public class RestaurantService implements IRestaurantService {
         AlcoholPreference strictAlcoholPreference = user.getAlcoholPreference() != null && isStrict(user.getAlcoholPreference().getWeight()) ? user.getAlcoholPreference() : null;
 
         // Initial selection
-        List<RestaurantEntity> restaurantEntities = new ArrayList<>();
-        if(strictCuisinePreferences.isEmpty()) {
-            restaurantEntities = restaurantRepository.findAll();
-        }
-        else{
-            for(CuisinePreference scp : strictCuisinePreferences){
-                restaurantEntities.addAll(restaurantRepository.havingACuisine(scp.getCuisineEntity().getId()));
-            }
-        }
-        restaurantEntities = new HashSet<>(restaurantEntities).stream().toList();
+        List<RestaurantEntity> restaurantEntities = restaurantRepository.findAll();
 
         // Rating filter
         if(user.getMinimumRating() != null)
@@ -77,8 +67,10 @@ public class RestaurantService implements IRestaurantService {
 
         // Filter out already disliked restaurants
         Set<Long> dislikedRestaurants = user.getDislikedRestaurants().stream().map(dr -> dr.getRestaurantEntity().getId()).collect(Collectors.toSet());
-
         restaurantEntities = restaurantEntities.stream().filter(r-> !dislikedRestaurants.contains(r.getId())).collect(Collectors.toList()); // TODO: test, might not work
+
+        if(strictCuisinePreferences.size()>0)
+            restaurantEntities = restaurantEntities.stream().filter(r -> !Collections.disjoint(r.getHasCuisines().stream().map(BaseEntity::getId).collect(Collectors.toSet()), strictCuisinePreferences.stream().map(ap->ap.getCuisineEntity().getId()).collect(Collectors.toSet()))).collect(Collectors.toList());
 
         if(strictAmbiencePreferences.size()>0)
             restaurantEntities = restaurantEntities.stream().filter(r -> !Collections.disjoint(r.getHasAmbiences().stream().map(BaseEntity::getId).collect(Collectors.toSet()), strictAmbiencePreferences.stream().map(ap->ap.getAmbienceEntity().getId()).collect(Collectors.toSet()))).collect(Collectors.toList());
@@ -96,6 +88,7 @@ public class RestaurantService implements IRestaurantService {
             restaurantEntities = restaurantEntities.stream().filter(r -> r.getHasAlcohol()!=null && r.getHasAlcohol().getId().equals(strictAlcoholPreference.getAlcoholEntity().getId())).collect(Collectors.toList());
 
         // Distance filtering
+        HashMap<Long, Double> restaurantDistance = new HashMap<>();
         if(lat!=null && lon!=null && user.getDistancePreference()!=null) {
             String userLatLong = lat + "," + lon;
             restaurantEntities = restaurantEntities.stream().filter(r -> {
@@ -104,6 +97,7 @@ public class RestaurantService implements IRestaurantService {
                         return false;
                     String restaurantLatLong = r.getLatitude() + "," + r.getLongitude();
                     Double distance = DistanceUtil.getDistanceInMiles(userLatLong, restaurantLatLong);
+                    restaurantDistance.put(r.getId(), distance);
                     return distance!=null && distance <= user.getDistancePreference();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -113,8 +107,8 @@ public class RestaurantService implements IRestaurantService {
         }
 
         return restaurantEntities.stream()
-                .map(r -> RestaurantMapper.convertToUserDTO(r, likedRestaurants, null, calculateCosineSimilarity(createCosineForUser(user), createCosineForRestaurant(user, r))))
-                .sorted(Comparator.comparing(RestaurantUserDTO::getCosineSimilarity, Comparator.reverseOrder())).toList();
+                .map(r -> RestaurantMapper.convertToUserDTO(r, likedRestaurants, null, calculateCosineSimilarity(createCosineForUser(user), createCosineForRestaurant(user, r)), restaurantDistance))
+                .sorted(Comparator.comparing(RestaurantUserDTO::getCosineSimilarity, Comparator.reverseOrder()).thenComparing(RestaurantUserDTO::getDistance, Comparator.reverseOrder())).toList();
     }
 
     //1->0.2
@@ -163,6 +157,32 @@ public class RestaurantService implements IRestaurantService {
         }
 
         return userCosine;
+    }
+
+
+    private ArrayList<Double> createCombinedCosine(List<UserEntity> users) {
+        ArrayList<Double> restCosine = new ArrayList<>();
+        ArrayList<AmbienceDTO> amb;
+        //ArrayList<CuisineDTO> cui;
+        UserEntity user = new UserEntity();
+
+        double outdoor = 0.0;
+        double wifi = 0.0;
+        double alcohol = 0.0;
+        double credit_card = 0.0;
+        double[] ambience;
+        double[] cuisine;
+        for(UserEntity u: users) {
+            if(u.getOutdoorSeatingPreference()==null) {
+
+            }
+        }
+
+
+
+
+        return restCosine;
+
     }
 
     private ArrayList<Double> createCosineForRestaurant(UserEntity user, RestaurantEntity restaurant) {
