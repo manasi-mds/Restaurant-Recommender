@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
 
+import static org.springframework.data.neo4j.core.schema.Relationship.Direction.INCOMING;
 import static org.springframework.data.neo4j.core.schema.Relationship.Direction.OUTGOING;
 
 @Node("Restaurant")
@@ -65,6 +66,12 @@ public class RestaurantEntity extends BaseEntity{
 
     @Relationship(type = "HAS_OUTDOOR_SEATING", direction = OUTGOING)
     OutdoorSeatingEntity hasOutdoorSeating;
+
+    @Relationship(type = "LIKE_RESTAURANT", direction = INCOMING)
+    Set<UserEntity> likedBy;
+
+    @Relationship(type = "DISLIKE_RESTAURANT", direction = INCOMING)
+    Set<UserEntity> dislikedBy;
 
     public boolean isOpen(){
         LocalDate currentDate = LocalDate.now();

@@ -98,11 +98,14 @@ public class UserService implements IUserService {
         Set<Long> filteredUsers = user.getFollowing().stream().map(fu-> fu.getUserEntity().getId()).collect(Collectors.toSet());
         filteredUsers.add(user.getId());
 
-        List<RestaurantDTO> likedRestaurants = user.getLikedRestaurants().stream().map(lr -> RestaurantMapper.convert(lr.getRestaurantEntity())).toList();
-        Set<Long> restaurantIds = likedRestaurants.stream().map(RestaurantDTO::getId).collect(Collectors.toSet());
+        Set<RestaurantEntity> likedRestaurants = user.getLikedRestaurants().stream().map(LikeRestaurant::getRestaurantEntity).collect(Collectors.toSet());
+        // Set<Long> restaurantIds = likedRestaurants.stream().map(RestaurantDTO::getId).collect(Collectors.toSet());
 
-        Set<UserEntity> potentialFriends = userRepository.getPotentialFriends(restaurantIds.stream().toList());
-
+        Set<UserEntity> potentialFriends = new HashSet<>();
+        for(RestaurantEntity r : likedRestaurants) {
+            potentialFriends.addAll(r.getLikedBy());
+        }
+        // Set<UserEntity> potentialFriends = userRepository.getPotentialFriends(restaurantIds.stream().toList());
         potentialFriends.removeIf(pf-> filteredUsers.contains(pf.getId()));
         return potentialFriends.stream().map(UserMapper::convert).toList();
     }
@@ -113,12 +116,18 @@ public class UserService implements IUserService {
         Set<Long> filteredUsers = user.getFollowing().stream().map(fu-> fu.getUserEntity().getId()).collect(Collectors.toSet());
         filteredUsers.add(user.getId());
 
-        List<RestaurantDTO> likedRestaurants = user.getLikedRestaurants().stream().map(lr -> RestaurantMapper.convert(lr.getRestaurantEntity())).toList();
-        Set<Long> restaurantIds = likedRestaurants.stream().map(RestaurantDTO::getId).collect(Collectors.toSet());
 
-        Set<UserEntity> potentialFriends = userRepository.getPotentialFriends(restaurantIds.stream().toList());
+        Set<RestaurantEntity> likedRestaurants = user.getLikedRestaurants().stream().map(LikeRestaurant::getRestaurantEntity).collect(Collectors.toSet());
+        //Set<Long> restaurantIds = likedRestaurants.stream().map(RestaurantDTO::getId).collect(Collectors.toSet());
 
+        Set<UserEntity> potentialFriends = new HashSet<>();
+        for(RestaurantEntity r : likedRestaurants) {
+        	potentialFriends.addAll(r.getLikedBy());
+        }
+
+//        Set<UserEntity> potentialFriends = userRepository.getPotentialFriends(restaurantIds.stream().toList());
         potentialFriends.removeIf(pf-> filteredUsers.contains(pf.getId()));
+
         return potentialFriends.stream().map(UserPreferenceMapper::convert).toList();
     }
 
@@ -146,8 +155,10 @@ public class UserService implements IUserService {
     }
 
     private void addDistancePreference(UserPreferenceDTO userPreferenceDTO, UserEntity user) {
-        if (userPreferenceDTO.getDistance() == null)
+        if (userPreferenceDTO.getDistance() == null){
+            user.setDistancePreference(null);
             return;
+        }
         Preconditions.checkArgument(userPreferenceDTO.getDistance() > 0, "Distance in miles cannot be less than 0");
         user.addDistancePreference(userPreferenceDTO.getDistance());
     }

@@ -3,7 +3,8 @@ import json
 from py2neo import Graph
 from py2neo import Node, Relationship
 
-graph = Graph('neo4j://localhost:11003', user="", password="")
+# graph = Graph('neo4j://localhost:11003', user="", password="")
+graph = Graph('bolt://localhost:7687', user="neo4j", password="local123")
 
 #graph = Graph('neo4j://localhost:11003', user="neo4j", password="123")
 
@@ -16,7 +17,7 @@ tx = graph.begin()
 
 #Creates the nodes, examples of single entry creation below
 for i in rest:
-    rest_node.append(Node("Restaurant", name = i["name"], address = i["address"], latitude = i["latitude"], longitude = i["longitude"], stars = i["stars"], review_count = i["review_count"], is_open = i["is_open"]))
+    rest_node.append(Node("Restaurant", business_id = i["business_id"], name = i["name"], address = i["address"], latitude = i["latitude"], longitude = i["longitude"], stars = i["stars"], review_count = i["review_count"], is_open = i["is_open"]))
     tx.create(rest_node[-1])
 
 tx.commit()

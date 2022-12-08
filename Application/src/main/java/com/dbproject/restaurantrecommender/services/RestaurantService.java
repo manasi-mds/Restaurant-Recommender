@@ -64,7 +64,7 @@ public class RestaurantService implements IRestaurantService {
             restaurantEntities = restaurantEntities.stream().filter(r -> r.getHasRating()!=null && r.getHasRating().getRating() >= user.getMinimumRating().getRatingEntity().getRating()).collect(Collectors.toList());
 
         // Remove closed restaurants
-        restaurantEntities = restaurantEntities.stream().filter(RestaurantEntity::isOpen).collect(Collectors.toList());
+        //restaurantEntities = restaurantEntities.stream().filter(RestaurantEntity::isOpen).collect(Collectors.toList());
 
         // Filter out already disliked restaurants
         Set<Long> dislikedRestaurants = user.getDislikedRestaurants().stream().map(dr -> dr.getRestaurantEntity().getId()).collect(Collectors.toSet());
