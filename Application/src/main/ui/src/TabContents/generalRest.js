@@ -38,21 +38,107 @@ export function GenRestTab(){
 
         if(selectedItems.length >0){
             for(var likes = 0; likes < selectedItems.length; likes++){
-                try{
-                    event.preventDefault();
-                    fetch('/user/likeRestaurant/' + user + '/' + selectedItems[likes].id + "?like=true", {
-                    method: 'PUT',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
+                if(selectedItems[likes].likeDislike === "Disliked"){
+                    selectedItems[likes].likeDislike = "Not Selected";
+                    try{
+                        event.preventDefault();
+                        console.log("select: ", selectedItems[likes]);
+                        fetch('/user/dislikeRestaurant/' + user + '/' + selectedItems[likes].id + "?" + "dislike=false", {
+                        method: 'PUT',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                        })
+                        .then(response => response.json())
+                        .then(response => console.log(JSON.stringify(response)))
                     }
-                    })
-                    .then(response => response.json())
-                    .then(response => console.log(JSON.stringify(response)))
+                    catch (e) {
+                        console.error(e);
+                    }
                 }
-                catch (e) {
-                    console.error(e);
+                else{
+                    try{
+                        event.preventDefault();
+                        var likeState = "like=true";
+                        console.log("select: ", selectedItems[likes]);
+                        if(selectedItems[likes].likeDislike === "Liked"){
+                            likeState = "like=false";
+                            console.log("Thou art false");
+                            selectedItems[likes].likeDislike = "Not Selected";
+                        }
+                        else{
+                            selectedItems[likes].likeDislike = "Liked";
+                        }
+                        fetch('/user/likeRestaurant/' + user + '/' + selectedItems[likes].id + "?" + likeState, {
+                        method: 'PUT',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                        })
+                        .then(response => response.json())
+                        .then(response => console.log(JSON.stringify(response)))
+                    }
+                    catch (e) {
+                        console.error(e);
+                    }
                 }
+                
+            }
+        }
+        
+        //setRestaurants(restaurants.filter(d => !selectedItems.includes(d)));
+        setSelectedItems([]);
+    };
+    const onDislikeConfirm = (event) => {
+        console.log("User: ", user);
+        console.log("selectedItems: ", selectedItems);
+
+        if(selectedItems.length >0){
+            for(var likes = 0; likes < selectedItems.length; likes++){
+                if(selectedItems[likes].likeDislike === "Liked"){
+                    try{
+                        event.preventDefault();
+                        console.log("select: ", selectedItems[likes]);
+                        fetch('/user/dislikeRestaurant/' + user + '/' + selectedItems[likes].id + "?like=false", {
+                        method: 'PUT',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                        })
+                        .then(response => response.json())
+                        .then(response => console.log(JSON.stringify(response)))
+                    }
+                    catch (e) {
+                        console.error(e);
+                    }
+                }
+                else{
+                    try{
+                        event.preventDefault();
+                        var likeState = "dislike=true";
+                        console.log("select: ", selectedItems[likes]);
+                        if(selectedItems[likes].likeDislike === "Disliked"){
+                            likeState = "dislike=false";
+                            console.log("Thou art false");
+                        }
+                        fetch('/user/dislikeRestaurant/' + user + '/' + selectedItems[likes].id + "?" + likeState, {
+                        method: 'PUT',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                        })
+                        .then(response => response.json())
+                        .then(response => console.log(JSON.stringify(response)))
+                    }
+                    catch (e) {
+                        console.error(e);
+                    }
+                }
+                
             }
         }
         
@@ -71,14 +157,16 @@ export function GenRestTab(){
             for(var i = 0; i < data.data.length; i++){
                 data.data[i].isAlcoholServed = data.data[i].isAlcoholServed.toString();
                 data.data[i].isOpen = data.data[i].isOpen.toString();
-                if(data.data[i].likeDisliked == 0){
-                    data.data[i].likeDisliked = "Liked";
+                
+                if(data.data[i].likeDislike === 0){
+                    data.data[i].likeDislike = "Liked";
+
                 }
-                else if(data.data[i].likeDisliked == 2){
-                    data.data[i].likeDisliked = "Disliked";
+                else if(data.data[i].likeDislike === 2){
+                    data.data[i].likeDislike = "Disliked";
                 }
                 else{
-                    data.data[i].likeDisliked = "Not Selected";
+                    data.data[i].likeDislike = "Not Selected";
                 }
                 var cuisineList = "";
                 for(var j = 0; j < data.data[i].cuisines.length; j++){
@@ -133,6 +221,7 @@ export function GenRestTab(){
         setPreferences={setPreferences}
         filteringProperties={REST_FILTERING_PROPERTIES}
         onLike={onLikeConfirm}
+        onDisLike={onDislikeConfirm}
         />
     </Box>
   

@@ -1,10 +1,10 @@
 import React from 'react';
-import { Link } from '@cloudscape-design/components';
+import { StatusIndicator } from '@cloudscape-design/components';
 import { addColumnSortLabels } from '../commons/labels';
 
 export const REC_REST_DEFAULT_PREFERENCES = {
   pageSize: 30,
-  visibleContent: ['recommender', 'name', 'address', 'cuisines', 'isAlcoholServed', 'rating','isOpen', 'likeDisliked'],
+  visibleContent: ['recommender', 'name', 'address', 'cuisines', 'isAlcoholServed', 'rating','isOpen', 'likeDislike'],
   wrapLines: false,
 };
 
@@ -17,11 +17,11 @@ export const REC_REST_COLUMN_DEFINITIONS = addColumnSortLabels([
     minWidth: 180,
   },
   {
-    id: 'likeDisliked',
-    sortingField: 'likeDisliked',
+    id: 'likeDislike',
+    sortingField: 'likeDislike',
     header: '(Dis)Liked',
     cell: item => (
-      <StatusIndicator type={item.liked === 'Disliked' ? 'error' : 'success'}>{item.liked}</StatusIndicator>
+      <StatusIndicator type={item.likeDislike === 'Disliked' ? 'error' : (item.likeDislike === 'Liked' ? 'success' : 'stopped')}>{item.likeDislike}</StatusIndicator>
     ),
     minWidth: 100,
   },
@@ -91,8 +91,8 @@ export const PAGE_SIZE_OPTIONS = [
 
 export const REC_REST_FILTERING_PROPERTIES = [
   {
-    propertyLabel: 'Liked or Disliked Name',
-    key: 'likeDisliked',
+    propertyLabel: 'Liked or Disliked',
+    key: 'likeDislike',
     groupValuesLabel: 'Liked or Disliked',
     operators: ['=', '!='],
   },

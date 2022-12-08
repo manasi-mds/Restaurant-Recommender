@@ -92,25 +92,57 @@ export function GetFollowersTab(){
 
         if(selectedItems.length >0){
             for(var likes = 0; likes < selectedItems.length; likes++){
-                try{
-                    event.preventDefault();
-                    fetch('/user/likeRestaurant/' + user + '/' + selectedItems[likes].id + "?like=true", {
-                    method: 'PUT',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
+                if(selectedItems[likes].likeDislike === "Disliked"){
+                    selectedItems[likes].likeDislike = "Not Selected";
+                    try{
+                        event.preventDefault();
+                        console.log("select: ", selectedItems[likes]);
+                        fetch('/user/dislikeRestaurant/' + user + '/' + selectedItems[likes].id + "?" + "dislike=false", {
+                        method: 'PUT',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                        })
+                        .then(response => response.json())
+                        .then(response => console.log(JSON.stringify(response)))
                     }
-                    })
-                    .then(response => response.json())
-                    .then(response => console.log(JSON.stringify(response)))
+                    catch (e) {
+                        console.error(e);
+                    }
                 }
-                catch (e) {
-                    console.error(e);
+                else{
+                    try{
+                        event.preventDefault();
+                        var likeState = "like=true";
+                        console.log("select: ", selectedItems[likes]);
+                        if(selectedItems[likes].likeDislike === "Liked"){
+                            likeState = "like=false";
+                            console.log("Thou art false");
+                            selectedItems[likes].likeDislike = "Not Selected";
+                        }
+                        else{
+                            selectedItems[likes].likeDislike = "Liked";
+                        }
+                        fetch('/user/likeRestaurant/' + user + '/' + selectedItems[likes].id + "?" + likeState, {
+                        method: 'PUT',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                        })
+                        .then(response => response.json())
+                        .then(response => console.log(JSON.stringify(response)))
+                    }
+                    catch (e) {
+                        console.error(e);
+                    }
                 }
+                
             }
         }
         
-        setRestaurants(restaurants.filter(d => !selectedItems.includes(d)));
+        //setRestaurants(restaurants.filter(d => !selectedItems.includes(d)));
         setSelectedItems([]);
     };
     return(

@@ -28,12 +28,13 @@ import {
 import { useLocalStorage } from '../commons/localStorage';
 import { useColumnWidths } from '../commons/use-column-widths';
 import {RestPropertyFilterTable} from '../tables/restTable';
-import { REST_COLUMN_DEFINITIONS, REST_FILTERING_PROPERTIES, REST_DEFAULT_PREFERENCES } from '../tables/restTable-property-filter-config';
+import { PREF_REST_COLUMN_DEFINITIONS, PREF_REST_FILTERING_PROPERTIES, PREF_REST_DEFAULT_PREFERENCES } from '../tables/prefRestTable-property-filter-config';
+import { useId } from "react";
 
 
 export function UserPreferences(){
 
-
+  const API_KEY = "AIzaSyBJPrEYIojDH_794kMGjcDrTzihHa6HvwY";
   //***************** Map Stuff */
   const[lat, setLat] = React.useState(39.97465381516658);
   const[longt, setLong] = React.useState(-75.20428157754901);
@@ -106,8 +107,8 @@ export function UserPreferences(){
       value: "casual: (6117)"
     }]
     /* Collection Hooks */
-    const [columnDefinitions, saveWidths] = useColumnWidths('React-TableServerSide-Widths', REST_COLUMN_DEFINITIONS);
-    const [preferences, setPreferences] = useLocalStorage('React-DistributionsTable-Preferences', REST_DEFAULT_PREFERENCES);
+    const [columnDefinitions, saveWidths] = useColumnWidths('React-TableServerSide-Widths', PREF_REST_COLUMN_DEFINITIONS);
+    const [preferences, setPreferences] = useLocalStorage('React-DistributionsTable-Preferences', PREF_REST_DEFAULT_PREFERENCES);
     const [toolsOpen, setToolsOpen] = React.useState(false);
     const [
       selectedOption,
@@ -118,7 +119,7 @@ export function UserPreferences(){
     const [cuisines, setCuisines] = React.useState([]);
     const [restaurants, setRestaurants] = React.useState([]);
 
-    const [maxDist, setMaxDist] = React.useState(0);
+    const [maxDist, setMaxDist] = React.useState("");
 
     const [userID, setuserID] = React.useState("");
     const [alcoholWeight, setalcoholWeight] = React.useState("");
@@ -185,18 +186,12 @@ export function UserPreferences(){
     }
     
 
-    const [vegVal, setVegVal] = React.useState('');
     const handleAlcoRadioChange = (event) => {
         setalcoholWeight(event.target.value);
         console.log(event.target.value)
         setError(false);
     };
-    const handleVegRadioChange = (event) => {
-        setVegVal(event.target.value);
-        console.log(event.target.value)
-        setHelperText(' ');
-        setError(false);
-    };
+
     const handleWifiRadioChange = (event) => {
         setWifiWeight(event.target.value);
         console.log(event.target.value)
@@ -266,9 +261,11 @@ export function UserPreferences(){
 
   const fetchRestData = async (event) => {
     event.preventDefault();
+
     try {
         const response = await fetch(
-            "/user/" + userID + "/potentialRestaurants"
+          //restaurant/getPreferredRestaurants/6134?lat=39.963042&lon=-75.1741858944
+            "restaurant/getPreferredRestaurants/" + userID + "?lat=" +lat +"&lon=" + longt
         );
         const data = await response.json();
         
@@ -284,8 +281,9 @@ export function UserPreferences(){
             }
             data.data[i].cuisines = cuisineList;
         }
+        console.log(data.data);
         console.log(selectedItems);
-        setRestaurants(data.data)
+        setRestaurants(data.data);
 
     
     } catch (e) {
@@ -293,14 +291,18 @@ export function UserPreferences(){
     }
 }
 
-  const onLikeConfirm = (event) => {
-      console.log("selectedItems: ", selectedItems);
+const onLikeConfirm = (event) => {
+  console.log("User: ", userID);
+  console.log("selectedItems: ", selectedItems);
 
-      if(selectedItems.length >0){
-          for(var likes = 0; likes < selectedItems.length; likes++){
+  if(selectedItems.length >0){
+      for(var likes = 0; likes < selectedItems.length; likes++){
+          if(selectedItems[likes].likeDislike === "Disliked"){
+              selectedItems[likes].likeDislike = "Not Selected";
               try{
                   event.preventDefault();
-                  fetch('/user/likeRestaurant/' + userID + '/' + selectedItems[likes].id + "?like=true", {
+                  console.log("select: ", selectedItems[likes]);
+                  fetch('/user/dislikeRestaurant/' + userID + '/' + selectedItems[likes].id + "?" + "dislike=false", {
                   method: 'PUT',
                   headers: {
                       'Accept': 'application/json',
@@ -314,11 +316,40 @@ export function UserPreferences(){
                   console.error(e);
               }
           }
+          else{
+              try{
+                  event.preventDefault();
+                  var likeState = "like=true";
+                  console.log("select: ", selectedItems[likes]);
+                  if(selectedItems[likes].likeDislike === "Liked"){
+                      likeState = "like=false";
+                      console.log("Thou art false");
+                      selectedItems[likes].likeDislike = "Not Selected";
+                  }
+                  else{
+                      selectedItems[likes].likeDislike = "Liked";
+                  }
+                  fetch('/user/likeRestaurant/' + userID + '/' + selectedItems[likes].id + "?" + likeState, {
+                  method: 'PUT',
+                  headers: {
+                      'Accept': 'application/json',
+                      'Content-Type': 'application/json'
+                  }
+                  })
+                  .then(response => response.json())
+                  .then(response => console.log(JSON.stringify(response)))
+              }
+              catch (e) {
+                  console.error(e);
+              }
+          }
+          
       }
-      
-      setRestaurants(restaurants.filter(d => !selectedItems.includes(d)));
-      setSelectedItems([]);
-  };
+  }
+  
+  //setRestaurants(restaurants.filter(d => !selectedItems.includes(d)));
+  setSelectedItems([]);
+};
   
   
   //Replace this with user entity node creation
@@ -353,7 +384,7 @@ export function UserPreferences(){
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ "alcoholServed":iAS, "wifiTypeAvailable":wifiTypes, "minimumRating":minRate, "outdoorSeating":outdoor, "creditCardAccepted":credit, "ambiences":amb, "cuisines":cuis})
+        body: JSON.stringify({ "distance": parseFloat(maxDist),"alcoholServed":iAS, "wifiTypeAvailable":wifiTypes, "minimumRating":minRate, "outdoorSeating":outdoor, "creditCardAccepted":credit, "ambiences":amb, "cuisines":cuis})
         })
         .then(response => response.json())
         .then(response => console.log(JSON.stringify(response)))
@@ -372,6 +403,28 @@ export function UserPreferences(){
                 setuserID(event.detail.value)
             }
         />
+                    <div style={{ height: '50vh', width: '50%' }}>
+      <GoogleMapReact
+          onClick={ev => {
+            console.log("latitide = ", ev.lat);
+            setLat(ev.lat);
+            console.log("longitude = ", ev.lng);
+            setLong(ev.lng);
+
+          }}
+        bootstrapURLKeys={{ key:  API_KEY}}
+        defaultCenter={defaultProps.center}
+        defaultZoom={defaultProps.zoom}
+        
+      >
+                <Marker
+                key="Name"
+                text="text"
+                lat={lat}
+                lng={longt}
+              />
+      </GoogleMapReact>
+    </div>
       <ExpandableSection headerText="User Preference Update">
     <form onSubmit={handleSubmit}>
 
@@ -402,7 +455,7 @@ export function UserPreferences(){
               selectedAriaLabel="Selected"
             />
 
-            2. How important is that Choice to you?
+            1.1 How important is that Choice to you?
             <RadioGroup row
                 aria-labelledby="demo-radio-buttons-group-label"
                 name="radio-buttons-group"
@@ -415,19 +468,7 @@ export function UserPreferences(){
             <FormControlLabel value="1" control={<Radio />} label="Indifferent" />
             </RadioGroup>
 
-            2. How important is Vegetarianism to you?
-            <RadioGroup row
-                aria-labelledby="demo-radio-buttons-group-label"
-                name="veg-buttons-group"
-                onChange={handleVegRadioChange}
-            >
-            <FormControlLabel value="5" control={<Radio />} label="Exclusively Vegetarian" />
-            <FormControlLabel value="4" control={<Radio />} label="Mostly Vegetarian" />
-            <FormControlLabel value="3" control={<Radio />} label="Open to Vegetarian" />
-            <FormControlLabel value="2" control={<Radio />} label="Indifferent" />
-            <FormControlLabel value="1" control={<Radio />} label="Prefers non-Vegetarian" />
-            </RadioGroup>
-            3. Would you like Free or Paid Wifi?
+            2. Would you like Free or Paid Wifi?
             <Select
               selectedOption={wifiPF}
               onChange={({ detail }) =>
@@ -439,7 +480,7 @@ export function UserPreferences(){
               ]}
               selectedAriaLabel="Selected"
             />
-            4. How important is that choice to you?
+            2.1 How important is that choice to you?
             <RadioGroup row
                 aria-labelledby="demo-radio-buttons-group-label"
                 name="veg-buttons-group"
@@ -451,7 +492,7 @@ export function UserPreferences(){
             <FormControlLabel value="2" control={<Radio />} label="Mildly Prefer" />
             <FormControlLabel value="1" control={<Radio />} label="Indifferent" />
             </RadioGroup>
-            5. Would you prefer having Outdoor Seating?
+            3. Would you prefer having Outdoor Seating?
             <Select
               selectedOption={odSeat}
               onChange={({ detail }) =>
@@ -463,7 +504,7 @@ export function UserPreferences(){
               ]}
               selectedAriaLabel="Selected"
             />
-            6. How important is that choice to you?
+            3.1 How important is that choice to you?
             <RadioGroup row
                 aria-labelledby="demo-radio-buttons-group-label"
                 name="veg-buttons-group"
@@ -475,7 +516,7 @@ export function UserPreferences(){
             <FormControlLabel value="2" control={<Radio />} label="Mildly Prefer" />
             <FormControlLabel value="1" control={<Radio />} label="Indifferent" />
             </RadioGroup>
-            7. Would you like to use Credit Card?
+            4. Would you like to use Credit Card?
             <Select
               selectedOption={creditCard}
               onChange={({ detail }) =>
@@ -487,7 +528,7 @@ export function UserPreferences(){
               ]}
               selectedAriaLabel="Selected"
             />
-            5. How important is that choice to you?
+            4.1 How important is that choice to you?
             <RadioGroup row
                 aria-labelledby="demo-radio-buttons-group-label"
                 name="veg-buttons-group"
@@ -499,9 +540,10 @@ export function UserPreferences(){
             <FormControlLabel value="2" control={<Radio />} label="Mildly Prefer" />
             <FormControlLabel value="1" control={<Radio />} label="Indifferent" />
             </RadioGroup>
-            6. How important is Ambience to you?
 
-            7. Select your 3 most preferred types of ambience and their importance to you
+            5. Select your 3 most preferred types of ambience and their importance to you
+            
+            5.1
             <Autosuggest
               onChange={({ detail }) => setAmbValue1(detail.value)}
               value={ambience1}
@@ -511,6 +553,7 @@ export function UserPreferences(){
               placeholder="Enter ambience type"
               empty="No matches found"
             />
+            5.2
             <RadioGroup row
                 aria-labelledby="demo-radio-buttons-group-label"
                 name="veg-buttons-group"
@@ -522,6 +565,7 @@ export function UserPreferences(){
             <FormControlLabel value="2" control={<Radio />} label="Mildly Prefer" />
             <FormControlLabel value="1" control={<Radio />} label="Indifferent" />
             </RadioGroup>
+            5.3
             <Autosuggest
               onChange={({ detail }) => setAmbValue2(detail.value)}
               value={ambience2}
@@ -531,6 +575,7 @@ export function UserPreferences(){
               placeholder="Enter ambience type"
               empty="No matches found"
             />
+            5.4
             <RadioGroup row
                 aria-labelledby="demo-radio-buttons-group-label"
                 name="veg-buttons-group"
@@ -542,6 +587,7 @@ export function UserPreferences(){
             <FormControlLabel value="2" control={<Radio />} label="Mildly Prefer" />
             <FormControlLabel value="1" control={<Radio />} label="Indifferent" />
             </RadioGroup>
+            5.5
             <Autosuggest
               onChange={({ detail }) => setAmbValue3(detail.value)}
               value={ambience3}
@@ -551,6 +597,7 @@ export function UserPreferences(){
               placeholder="Enter ambience type"
               empty="No matches found"
             />
+            5.6
             <RadioGroup row
                 aria-labelledby="demo-radio-buttons-group-label"
                 name="veg-buttons-group"
@@ -562,7 +609,7 @@ export function UserPreferences(){
             <FormControlLabel value="2" control={<Radio />} label="Mildly Prefer" />
             <FormControlLabel value="1" control={<Radio />} label="Indifferent" />
             </RadioGroup>
-            8. How important are Ratings to you?
+            6. How important are Ratings to you?
             <RadioGroup row
                 aria-labelledby="demo-radio-buttons-group-label"
                 name="veg-buttons-group"
@@ -574,6 +621,7 @@ export function UserPreferences(){
             <FormControlLabel value="2" control={<Radio />} label="Mildly Prefer" />
             <FormControlLabel value="1" control={<Radio />} label="Indifferent" />
             </RadioGroup>
+            6.1 Select your Minimum allowed Rating
             <Select
                 selectedOption={selectedOption}
                 onChange={({ detail }) =>
@@ -596,7 +644,8 @@ export function UserPreferences(){
                 selectedAriaLabel="Selected"
             />
 
-            10. Select your 3 most preferred type of Cuisine:
+            7. Select your 3 most preferred type of Cuisine:
+            7.1
             <Autosuggest
               onChange={({ detail }) => setCuisineSelected1(detail.value)}
               value={cuisineSelected1}
@@ -606,7 +655,7 @@ export function UserPreferences(){
               placeholder="Enter cuisine type"
               empty="No matches found"
             />
-            9. How important is Cuisine to you?
+            7.2 How important is this cuisine to you?
             <RadioGroup row
                 aria-labelledby="demo-radio-buttons-group-label"
                 name="veg-buttons-group"
@@ -618,6 +667,7 @@ export function UserPreferences(){
             <FormControlLabel value="2" control={<Radio />} label="Mildly Prefer" />
             <FormControlLabel value="1" control={<Radio />} label="Indifferent" />
             </RadioGroup>            
+            7.3
             <Autosuggest
               onChange={({ detail }) => setCuisineSelected2(detail.value)}
               value={cuisineSelected2}
@@ -627,7 +677,7 @@ export function UserPreferences(){
               placeholder="Enter cuisine type"
               empty="No matches found"
             />
-            9. How important is Cuisine to you?
+            7.4. How important is this cuisine to you?
             <RadioGroup row
                 aria-labelledby="demo-radio-buttons-group-label"
                 name="veg-buttons-group"
@@ -638,7 +688,8 @@ export function UserPreferences(){
             <FormControlLabel value="3" control={<Radio />} label="Moderately Prefer" />
             <FormControlLabel value="2" control={<Radio />} label="Mildly Prefer" />
             <FormControlLabel value="1" control={<Radio />} label="Indifferent" />
-            </RadioGroup>           
+            </RadioGroup> 
+            7.5          
             <Autosuggest
               onChange={({ detail }) => setCuisineSelected3(detail.value)}
               value={cuisineSelected3}
@@ -648,7 +699,7 @@ export function UserPreferences(){
               placeholder="Enter cuisine type"
               empty="No matches found"
             />
-            9. How important is Cuisine to you?
+            7.6 How important is this cuisine to you?
             <RadioGroup row
                 aria-labelledby="demo-radio-buttons-group-label"
                 name="veg-buttons-group"
@@ -660,28 +711,7 @@ export function UserPreferences(){
             <FormControlLabel value="2" control={<Radio />} label="Mildly Prefer" />
             <FormControlLabel value="1" control={<Radio />} label="Indifferent" />
             </RadioGroup>
-            <div style={{ height: '50vh', width: '50%' }}>
-      <GoogleMapReact
-          onClick={ev => {
-            console.log("latitide = ", ev.lat);
-            setLat(ev.lat);
-            console.log("longitude = ", ev.lng);
-            setLong(ev.lng);
 
-          }}
-        bootstrapURLKeys={{ key: "AIzaSyBJPrEYIojDH_794kMGjcDrTzihHa6HvwY" }}
-        defaultCenter={defaultProps.center}
-        defaultZoom={defaultProps.zoom}
-        
-      >
-                <Marker
-                key="Name"
-                text="text"
-                lat={lat}
-                lng={longt}
-              />
-      </GoogleMapReact>
-    </div>
             <Button sx={{ mt: 1, mr: 1 }} type="submit" variant="outlined">
                 Submit
             </Button>
@@ -711,7 +741,7 @@ export function UserPreferences(){
         saveWidths={saveWidths}
         preferences={preferences}
         setPreferences={setPreferences}
-        filteringProperties={REST_FILTERING_PROPERTIES}
+        filteringProperties={PREF_REST_FILTERING_PROPERTIES}
         onLike={onLikeConfirm}
         />
           </ExpandableSection>

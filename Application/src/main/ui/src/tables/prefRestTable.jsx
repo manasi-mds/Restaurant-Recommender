@@ -93,6 +93,8 @@ const TableNoMatchState = props => (
       label: 'Main Restaurant properties',
       options: [
         { id: 'name', label: 'Restaurant Name', editable: false },
+        { id: 'cosineSimilarity', label: 'Similarity Score' },
+        { id: 'recommender', label: 'Recommender' },
         { id: 'address', label: 'Address' },
         { id: 'cuisines', label: 'Cuisine Types' },
         { id: 'isAlcoholServed', label: 'Alcohol?' },
@@ -133,7 +135,7 @@ const TableNoMatchState = props => (
     />
   );
 
-export function RestPropertyFilterTable({
+export function RecRestPropertyFilterTable({
   data,
   loadHelpPanelContent,
   columnDefinitions,
@@ -141,7 +143,7 @@ export function RestPropertyFilterTable({
   preferences,
   setPreferences,
   filteringProperties,
-  selectedItems, onSelectionChange, onLike, onDislike
+  selectedItems, onSelectionChange, onLike
 }) {
   const { items, actions, filteredItemsCount, collectionProps, paginationProps, propertyFilterProps } = useCollection(
     data,
@@ -189,13 +191,11 @@ export function RestPropertyFilterTable({
               <Button disabled={selectedItems.length === 0} onClick={onLike}>
                 Like
               </Button>
-              
             </SpaceBetween>
           }
           
         />
       }
-      //*<Button disabled={selectedItems.length === 0} onClick={onDislike}>Dislike</Button>/
       loadingText="Loading Restaurants"
       filter={
         <PropertyFilter

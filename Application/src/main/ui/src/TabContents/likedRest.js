@@ -29,7 +29,65 @@ export function LikedRestTab(){
     const [error, setError] = React.useState(false);
     const [selectedItems, setSelectedItems] = React.useState([]);
 
+    const onLikeConfirm = (event) => {
+        console.log("User: ", user);
+        console.log("selectedItems: ", selectedItems);
 
+        if(selectedItems.length >0){
+            for(var likes = 0; likes < selectedItems.length; likes++){
+                if(selectedItems[likes].likeDislike === "Disliked"){
+                    selectedItems[likes].likeDislike = "Not Selected";
+                    try{
+                        event.preventDefault();
+                        console.log("select: ", selectedItems[likes]);
+                        fetch('/user/dislikeRestaurant/' + user + '/' + selectedItems[likes].id + "?" + "dislike=false", {
+                        method: 'PUT',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                        })
+                        .then(response => response.json())
+                        .then(response => console.log(JSON.stringify(response)))
+                    }
+                    catch (e) {
+                        console.error(e);
+                    }
+                }
+                else{
+                    try{
+                        event.preventDefault();
+                        var likeState = "like=true";
+                        console.log("select: ", selectedItems[likes]);
+                        if(selectedItems[likes].likeDislike === "Liked"){
+                            likeState = "like=false";
+                            console.log("Thou art false");
+                            selectedItems[likes].likeDislike = "Not Selected";
+                        }
+                        else{
+                            selectedItems[likes].likeDislike = "Liked";
+                        }
+                        fetch('/user/likeRestaurant/' + user + '/' + selectedItems[likes].id + "?" + likeState, {
+                        method: 'PUT',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        }
+                        })
+                        .then(response => response.json())
+                        .then(response => console.log(JSON.stringify(response)))
+                    }
+                    catch (e) {
+                        console.error(e);
+                    }
+                }
+                
+            }
+        }
+        
+        //setRestaurants(restaurants.filter(d => !selectedItems.includes(d)));
+        setSelectedItems([]);
+    };
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -42,6 +100,17 @@ export function LikedRestTab(){
                 //
                 data.data[i].isAlcoholServed = data.data[i].isAlcoholServed.toString();
                 data.data[i].isOpen = data.data[i].isOpen.toString();
+                if(data.data[i].likeDislike === 0){
+                    data.data[i].likeDislike = "Liked";
+
+                }
+                else if(data.data[i].likeDislike === 2){
+                    data.data[i].likeDislike = "Disliked";
+                }
+                else{
+                    data.data[i].likeDislike = "Not Selected";
+                }
+
                 var cuisineList = "";
                 for(var j = 0; j < data.data[i].cuisines.length; j++){
                     cuisineList += data.data[i].cuisines[j].name;

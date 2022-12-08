@@ -40,6 +40,7 @@ function App() {
           content:  
           UserPreferences()
         },
+        /*
         {
           label: "maptest",
           id: "second",
@@ -47,6 +48,7 @@ function App() {
           SimpleMap(39.97465381516658,-75.20428157754901 )
           
         },
+        */
         {
           label: "General Restaurants",
           id: "genRest",

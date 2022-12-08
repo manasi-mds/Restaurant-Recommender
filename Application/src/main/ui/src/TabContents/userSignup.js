@@ -22,6 +22,8 @@ export function UserSignup(){
   const [error, setError] = React.useState(false);
 
   const [userName, setuserName] = React.useState("");
+  const [userID, setuserID] = React.useState(".");
+
   
   //Replace this with user entity node creation
   //Probably want to set the user vector and send a post request to the endpoints
@@ -36,9 +38,10 @@ export function UserSignup(){
     body: JSON.stringify({ "name": name, "email": userName, "password": password })
     })
     .then(response => response.json())
-    .then(response => console.log(JSON.stringify(response)))
-
+    .then(response => alert(JSON.stringify(response)))
+    
   };
+
     return (
     <Box>
       <form onSubmit={handleSubmit}>
@@ -83,7 +86,7 @@ export function UserSignup(){
             </Button>
             </FormControl>
             </form>
-            
+            {userID}
       </Box>
     )
 }

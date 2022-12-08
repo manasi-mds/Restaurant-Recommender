@@ -2,18 +2,18 @@ import React from 'react';
 import { StatusIndicator } from '@cloudscape-design/components';
 import { addColumnSortLabels } from '../commons/labels';
 
-export const REST_DEFAULT_PREFERENCES = {
+export const PREF_REST_DEFAULT_PREFERENCES = {
   pageSize: 30,
-  visibleContent: ['name', 'address', 'cuisines', 'isAlcoholServed', 'rating','isOpen', 'likeDislike'],
+  visibleContent: ['cosineSimilarity', 'name', 'address', 'cuisines', 'isAlcoholServed', 'rating','isOpen', 'likeDislike'],
   wrapLines: false,
 };
 
-export const REST_COLUMN_DEFINITIONS = addColumnSortLabels([
+export const PREF_REST_COLUMN_DEFINITIONS = addColumnSortLabels([
   {
-    id: 'name',
-    sortingField: 'name',
-    header: 'Restaurant',
-    cell: item => item.name,
+    id: 'cosineSimilarity',
+    sortingField: 'cosineSimilarity',
+    header: 'Similarity',
+    cell: item => item.cosineSimilarity,
     minWidth: 180,
   },
   {
@@ -24,6 +24,13 @@ export const REST_COLUMN_DEFINITIONS = addColumnSortLabels([
       <StatusIndicator type={item.likeDislike === 'Disliked' ? 'error' : (item.likeDislike === 'Liked' ? 'success' : 'stopped')}>{item.likeDislike}</StatusIndicator>
     ),
     minWidth: 100,
+  },
+  {
+    id: 'name',
+    sortingField: 'name',
+    header: 'Restaurant',
+    cell: item => item.name,
+    minWidth: 180,
   },
   {
     id: 'address',
@@ -82,18 +89,25 @@ export const PAGE_SIZE_OPTIONS = [
   { value: 50, label: '50 Restaurants' },
 ];
 
-export const REST_FILTERING_PROPERTIES = [
-  {
-    propertyLabel: 'Restaurant Name',
-    key: 'name',
-    groupValuesLabel: 'Restaurant Name values',
-    operators: [':', '!:', '=', '!='],
-  },
+export const PREF_REST_FILTERING_PROPERTIES = [
   {
     propertyLabel: 'Liked or Disliked',
     key: 'likeDislike',
     groupValuesLabel: 'Liked or Disliked',
     operators: ['=', '!='],
+  },
+  
+  {
+    propertyLabel: 'Similarity',
+    key: 'cosineSimilarity',
+    groupValuesLabel: 'Similarity values',
+    operators: ['=', '!=', '<', '<=', '>', '>='],
+  },
+  {
+    propertyLabel: 'Restaurant Name',
+    key: 'name',
+    groupValuesLabel: 'Restaurant Name values',
+    operators: [':', '!:', '=', '!='],
   },
   {
     propertyLabel: 'Address',
