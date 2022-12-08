@@ -1,6 +1,8 @@
 package com.dbproject.restaurantrecommender.mapper;
 
 import com.dbproject.restaurantrecommender.dto.UserPreferenceDTO;
+import com.dbproject.restaurantrecommender.dto.preference.AlcoholServedPreferenceDTO;
+import com.dbproject.restaurantrecommender.dto.preference.CuisinePreferenceDTO;
 import com.dbproject.restaurantrecommender.model.UserEntity;
 
 
@@ -19,6 +21,14 @@ public class UserPreferenceMapper {
         userDTO.setName(userEntity.getName());
         userDTO.setEmail(userEntity.getEmail());
         userDTO.setPassword(userEntity.getPassword());
+
+        AlcoholServedPreferenceDTO alcoholServedPreferenceDTO = new AlcoholServedPreferenceDTO();
+        if(userEntity.getAlcoholPreference()!=null) alcoholServedPreferenceDTO.setIsAlcoholServed(userEntity.getAlcoholPreference().getAlcoholEntity().isAlcoholServed());
+//        userDTO.setCuisines(userEntity.getCuisinePreferences().stream().map(cuisinePreferenceEntity -> {
+////            return new CuisinePreferenceDTO(cuisinePreferenceEntity.getCuisineEntity());
+//        }).toList());
+
+
         return userDTO;
     }
 }
