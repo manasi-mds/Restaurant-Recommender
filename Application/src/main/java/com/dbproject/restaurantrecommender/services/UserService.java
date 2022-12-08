@@ -8,6 +8,7 @@ import com.dbproject.restaurantrecommender.dto.preference.CuisinePreferenceDTO;
 import com.dbproject.restaurantrecommender.enums.WifiType;
 import com.dbproject.restaurantrecommender.mapper.RestaurantMapper;
 import com.dbproject.restaurantrecommender.mapper.UserMapper;
+import com.dbproject.restaurantrecommender.mapper.UserPreferenceMapper;
 import com.dbproject.restaurantrecommender.model.*;
 import com.dbproject.restaurantrecommender.respsitory.*;
 import lombok.RequiredArgsConstructor;
@@ -104,6 +105,21 @@ public class UserService implements IUserService {
 
         potentialFriends.removeIf(pf-> filteredUsers.contains(pf.getId()));
         return potentialFriends.stream().map(UserMapper::convert).toList();
+    }
+
+    @Override
+    public List<UserPreferenceDTO> getPotentialFriendsPreferences(Long userId) {
+        UserEntity user = verifyUser(userId);
+        Set<Long> filteredUsers = user.getFollowing().stream().map(fu-> fu.getUserEntity().getId()).collect(Collectors.toSet());
+        filteredUsers.add(user.getId());
+
+        List<RestaurantDTO> likedRestaurants = user.getLikedRestaurants().stream().map(lr -> RestaurantMapper.convert(lr.getRestaurantEntity())).toList();
+        Set<Long> restaurantIds = likedRestaurants.stream().map(RestaurantDTO::getId).collect(Collectors.toSet());
+
+        Set<UserEntity> potentialFriends = userRepository.getPotentialFriendsPreferences(restaurantIds.stream().toList());
+
+        potentialFriends.removeIf(pf-> filteredUsers.contains(pf.getId()));
+        return potentialFriends.stream().map(UserPreferenceMapper::convert).toList();
     }
 
     @Override

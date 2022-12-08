@@ -65,6 +65,11 @@ public class UserController {
         return ResponseGenerator.createSuccessResponse(userService.getPotentialFriends(userId));
     }
 
+    @GetMapping("/{userId}/potentialFriendsPreferences")
+    ResponseBody getPotentialFriendsPreferences(@PathVariable Long userId) {
+        return ResponseGenerator.createSuccessResponse(userService.getPotentialFriendsPreferences(userId));
+    }
+
     @GetMapping("/{userId}/potentialRestaurants")
     ResponseBody getPotentialRestaurants(@PathVariable Long userId) {
         return ResponseGenerator.createSuccessResponse(userService.getPotentialRestaurants(userId));
