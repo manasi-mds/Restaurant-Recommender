@@ -27,7 +27,7 @@ import {
 
 import { useLocalStorage } from '../commons/localStorage';
 import { useColumnWidths } from '../commons/use-column-widths';
-import {RestPropertyFilterTable} from '../tables/restTable';
+import {RecRestPropertyFilterTable} from '../tables/prefRestTable';
 import { PREF_REST_COLUMN_DEFINITIONS, PREF_REST_FILTERING_PROPERTIES, PREF_REST_DEFAULT_PREFERENCES } from '../tables/prefRestTable-property-filter-config';
 import { useId } from "react";
 
@@ -119,33 +119,33 @@ export function UserPreferences(){
     const [cuisines, setCuisines] = React.useState([]);
     const [restaurants, setRestaurants] = React.useState([]);
 
-    const [maxDist, setMaxDist] = React.useState("");
+    const [maxDist, setMaxDist] = React.useState("20");
 
-    const [userID, setuserID] = React.useState("");
-    const [alcoholWeight, setalcoholWeight] = React.useState("");
-    const [cuisinesWeight1, setCuisinesWeight1] = React.useState("");
-    const [cuisinesWeight2, setCuisinesWeight2] = React.useState("");
-    const [cuisinesWeight3, setCuisinesWeight3] = React.useState("");
-    const [cuisineSelected1, setCuisineSelected1] = React.useState("");
-    const [cuisineSelected2, setCuisineSelected2] = React.useState("");
-    const [cuisineSelected3, setCuisineSelected3] = React.useState("");
-    const [ambience1, setAmbValue1] = React.useState("");
-    const [ambience1Weight, setAmbience1Weight] = React.useState("");
-    const [ambience2, setAmbValue2] = React.useState("");
-    const [ambience2Weight, setAmbience2Weight] = React.useState("");
-    const [ambience3, setAmbValue3] = React.useState("");
-    const [ambience3Weight, setAmbience3Weight] = React.useState("");
-    const [creditCardAccepted, setCredit] = React.useState("");
-    const [wifiWeight, setWifiWeight] = React.useState("");
-    const [minimumRating, setMinRating] = React.useState({});
-    const [outdoorSeatingWeight, setOutDoorSeatingWeight] = React.useState("");
+    const [userID, setuserID] = React.useState("6124");
+    const [alcoholWeight, setalcoholWeight] = React.useState("5");
+    const [cuisinesWeight1, setCuisinesWeight1] = React.useState("5");
+    const [cuisinesWeight2, setCuisinesWeight2] = React.useState("5");
+    const [cuisinesWeight3, setCuisinesWeight3] = React.useState("5");
+    const [cuisineSelected1, setCuisineSelected1] = React.useState("Beer Gardens       6");
+    const [cuisineSelected2, setCuisineSelected2] = React.useState("Barbeque       17");
+    const [cuisineSelected3, setCuisineSelected3] = React.useState("Kombucha       19");
+    const [ambience1, setAmbValue1] = React.useState("classy: (6116)");
+    const [ambience1Weight, setAmbience1Weight] = React.useState("3");
+    const [ambience2, setAmbValue2] = React.useState("hipster: (6110)");
+    const [ambience2Weight, setAmbience2Weight] = React.useState("3");
+    const [ambience3, setAmbValue3] = React.useState("touristy: (6109)");
+    const [ambience3Weight, setAmbience3Weight] = React.useState("3");
+    const [creditCardAccepted, setCredit] = React.useState("True");
+    const [wifiWeight, setWifiWeight] = React.useState("Free");
+    const [minimumRating, setMinRating] = React.useState({"minRating": 3.5, "weight": 5});
+    const [outdoorSeatingWeight, setOutDoorSeatingWeight] = React.useState("True");
     const [cuisineOptions, setCuisineOptions] = React.useState([]);
     const [ratingsWeight, setRatingsWeight] = React.useState("");
     const [pullCuisine, setPullCuisine] = React.useState(true);
     const [updateCuisine, setUpdateCuisine] = React.useState(false);
-    const [alcoholYN, setAlcoholYN] = React.useState({});
-    const [wifiPF, setWifiPF] = React.useState({});
-    const [odSeat, setODSeat] = React.useState({});
+    const [alcoholYN, setAlcoholYN] = React.useState({"isAlcoholServed":"True", "weight":5});
+    const [wifiPF, setWifiPF] = React.useState({"wifiType":"Free", "weight": 5});
+    const [odSeat, setODSeat] = React.useState({"isOutdoorSeatingAvailable": true, "weight": 5});
     
     const [creditCard, setCreditCard] = React.useState({});
         //Test Get API
@@ -261,7 +261,7 @@ export function UserPreferences(){
 
   const fetchRestData = async (event) => {
     event.preventDefault();
-
+    //setRestaurants([]);
     try {
         const response = await fetch(
           //restaurant/getPreferredRestaurants/6134?lat=39.963042&lon=-75.1741858944
@@ -272,6 +272,35 @@ export function UserPreferences(){
         for(var i = 0; i < data.data.length; i++){
             data.data[i].isAlcoholServed = data.data[i].isAlcoholServed.toString();
             data.data[i].isOpen = data.data[i].isOpen.toString();
+            if(data.data[i].wifi != null){
+              data.data[i].wifi = data.data[i].wifi.toString();
+            }
+            else{
+              data.data[i].wifi = "None";
+            }
+            if(data.data[i].isOutdoorSeatingAvailable != null){
+              data.data[i].isOutdoorSeatingAvailable = data.data[i].isOutdoorSeatingAvailable.toString();
+            }
+            else{
+              data.data[i].isOutdoorSeatingAvailable = "None";
+            }
+            if(data.data[i].isCreditCardAccepted != null){
+              data.data[i].isCreditCardAccepted = data.data[i].isCreditCardAccepted.toString();
+            }
+            else{
+              data.data[i].isCreditCardAccepted = "None";
+            }
+
+            if(data.data[i].likeDislike === 0){
+              data.data[i].likeDislike = "Liked";
+
+            }
+            else if(data.data[i].likeDislike === 2){
+                data.data[i].likeDislike = "Disliked";
+            }
+            else{
+                data.data[i].likeDislike = "Not Selected";
+            }
             var cuisineList = "";
             for(var j = 0; j < data.data[i].cuisines.length; j++){
                 cuisineList += data.data[i].cuisines[j].name;
@@ -359,7 +388,7 @@ const onLikeConfirm = (event) => {
       console.log(ambience1.slice(-5,-1));
       event.preventDefault();
       setError(false);
-      var iAS = alcoholYN.value == "True" ? {"isAlcoholServed":"True", "weight": parseInt(alcoholWeight)} : {"isAlcoholServed":"False", "weight": parseInt(alcoholWeight)};
+      var iAS = alcoholYN.value == "True" ? {"isAlcoholServed":true, "weight": parseInt(alcoholWeight)} : {"isAlcoholServed":false, "weight": parseInt(alcoholWeight)};
       var wifiTypes = {"wifiType":wifiPF.value, "weight": parseInt(wifiWeight)};
       var minRate = {"minRating": parseInt(minimumRating.value), "weight": parseInt(ratingsWeight)};
       var outdoor = odSeat.value  == "True" ? {"isOutdoorSeatingAvailable": true, "weight": parseInt(outdoorSeatingWeight)} : {"isOutdoorSeatingAvailable": false, "weight": parseInt(outdoorSeatingWeight)};
@@ -396,7 +425,7 @@ const onLikeConfirm = (event) => {
   };
     return (
     <Box>
-      
+      Enter User ID
       <Input
             value={userID}
             onChange={event =>
@@ -542,7 +571,7 @@ const onLikeConfirm = (event) => {
             </RadioGroup>
 
             5. Select your 3 most preferred types of ambience and their importance to you
-            
+
             5.1
             <Autosuggest
               onChange={({ detail }) => setAmbValue1(detail.value)}
@@ -645,7 +674,6 @@ const onLikeConfirm = (event) => {
             />
 
             7. Select your 3 most preferred type of Cuisine:
-            7.1
             <Autosuggest
               onChange={({ detail }) => setCuisineSelected1(detail.value)}
               value={cuisineSelected1}
@@ -729,7 +757,7 @@ const onLikeConfirm = (event) => {
     </Button>
 </FormControl>
 </form>
-        <RestPropertyFilterTable
+        <RecRestPropertyFilterTable
         data={restaurants}
         selectedItems={selectedItems}
         onSelectionChange={event => setSelectedItems(event.detail.selectedItems)}

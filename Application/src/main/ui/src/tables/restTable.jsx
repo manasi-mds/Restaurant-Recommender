@@ -99,7 +99,10 @@ const TableNoMatchState = props => (
         { id: 'rating', label: 'Ratings' },
         { id: 'latitude', label: 'Longitude' },
         { id: 'longitude', label: 'Latitude' },
-        { id: 'isOpen', label: 'Open?' }
+        { id: 'isOpen', label: 'Open?' },
+        { id: 'wifi', label: 'Wifi Type' },
+        { id: 'isCreditCardAccepted', label: 'Is CreditCard Accepted?' },
+        { id: 'isOutdoorSeatingAvailable', label: 'Outdoor Seating Offered?' }
       ],
     },
   ];

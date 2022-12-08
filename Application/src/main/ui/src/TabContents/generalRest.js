@@ -157,6 +157,24 @@ export function GenRestTab(){
             for(var i = 0; i < data.data.length; i++){
                 data.data[i].isAlcoholServed = data.data[i].isAlcoholServed.toString();
                 data.data[i].isOpen = data.data[i].isOpen.toString();
+                if(data.data[i].wifi != null){
+                    data.data[i].wifi = data.data[i].wifi.toString();
+                  }
+                  else{
+                    data.data[i].wifi = "None";
+                  }
+                  if(data.data[i].isOutdoorSeatingAvailable != null){
+                    data.data[i].isOutdoorSeatingAvailable = data.data[i].isOutdoorSeatingAvailable.toString();
+                  }
+                  else{
+                    data.data[i].isOutdoorSeatingAvailable = "None";
+                  }
+                  if(data.data[i].isCreditCardAccepted != null){
+                    data.data[i].isCreditCardAccepted = data.data[i].isCreditCardAccepted.toString();
+                  }
+                  else{
+                    data.data[i].isCreditCardAccepted = "None";
+                  }
                 
                 if(data.data[i].likeDislike === 0){
                     data.data[i].likeDislike = "Liked";

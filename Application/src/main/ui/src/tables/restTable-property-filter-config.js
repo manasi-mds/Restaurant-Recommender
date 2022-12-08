@@ -4,7 +4,7 @@ import { addColumnSortLabels } from '../commons/labels';
 
 export const REST_DEFAULT_PREFERENCES = {
   pageSize: 30,
-  visibleContent: ['name', 'address', 'cuisines', 'isAlcoholServed', 'rating','isOpen', 'likeDislike'],
+  visibleContent: ['name', 'address', 'cuisines', 'isAlcoholServed', 'rating','isOpen', 'likeDislike', 'wifi','isCreditCardAccepted','isOutdoorSeatingAvailable'],
   wrapLines: false,
 };
 
@@ -19,7 +19,7 @@ export const REST_COLUMN_DEFINITIONS = addColumnSortLabels([
   {
     id: 'likeDislike',
     sortingField: 'likeDislike',
-    header: '(Dis)Liked',
+    header: 'Liked?',
     cell: item => (
       <StatusIndicator type={item.likeDislike === 'Disliked' ? 'error' : (item.likeDislike === 'Liked' ? 'success' : 'stopped')}>{item.likeDislike}</StatusIndicator>
     ),
@@ -68,6 +68,27 @@ export const REST_COLUMN_DEFINITIONS = addColumnSortLabels([
     minWidth: 100,
   },
   {
+    id: 'wifi',
+    sortingField: 'wifi',
+    header: 'Wifi Offered?',
+    cell: item => item.wifi,
+    minWidth: 100,
+  },
+  {
+    id: 'isCreditCardAccepted',
+    sortingField: 'isCreditCardAccepted',
+    header: 'Is Credit Card Accepted',
+    cell: item => item.isCreditCardAccepted,
+    minWidth: 100,
+  },
+  {
+    id: 'isOutdoorSeatingAvailable',
+    sortingField: 'isOutdoorSeatingAvailable',
+    header: 'Is Outdoor Seating Available',
+    cell: item => item.isOutdoorSeatingAvailable,
+    minWidth: 100,
+  },
+  {
     id: 'isOpen',
     sortingField: 'isOpen',
     header: 'Is Open?',
@@ -90,9 +111,9 @@ export const REST_FILTERING_PROPERTIES = [
     operators: [':', '!:', '=', '!='],
   },
   {
-    propertyLabel: 'Liked or Disliked',
+    propertyLabel: 'Liked?',
     key: 'likeDislike',
-    groupValuesLabel: 'Liked or Disliked',
+    groupValuesLabel: 'Liked?',
     operators: ['=', '!='],
   },
   {
@@ -123,6 +144,27 @@ export const REST_FILTERING_PROPERTIES = [
     propertyLabel: 'Open?',
     key: 'isOpen',
     groupValuesLabel: 'Open values',
+    operators: ['=', '!='],
+  }
+  ,
+  {
+    propertyLabel: 'What kind of wifi is offered?',
+    key: 'wifi',
+    groupValuesLabel: 'Wifi values',
+    operators: ['=', '!='],
+  }
+  ,
+  {
+    propertyLabel: 'Is Credit Card Accepted?',
+    key: 'isCreditCardAccepted',
+    groupValuesLabel: 'Credit Card Availability',
+    operators: ['=', '!='],
+  }
+  ,
+  {
+    propertyLabel: 'Is Outdoor Seating Available?',
+    key: 'isOutdoorSeatingAvailable',
+    groupValuesLabel: 'Outdoor Seating Availablity',
     operators: ['=', '!='],
   }
 ];

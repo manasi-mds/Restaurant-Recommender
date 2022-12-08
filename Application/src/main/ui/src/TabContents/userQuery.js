@@ -53,6 +53,7 @@ export function GetFollowersTab(){
         }
     }
     const handleSecondSubmit = async (event) => {
+        setRestaurants([]);
         event.preventDefault();
         for(var j = 0; j < followers.length; j++){
             try{
@@ -66,6 +67,24 @@ export function GetFollowersTab(){
 
                     d.data[i].isAlcoholServed = d.data[i].isAlcoholServed.toString();
                     d.data[i].isOpen = d.data[i].isOpen.toString();
+                    if(d.data[i].wifi != null){
+                        d.data[i].wifi = d.data[i].wifi.toString();
+                      }
+                      else{
+                        d.data[i].wifi = "None";
+                      }
+                      if(d.data[i].isOutdoorSeatingAvailable != null){
+                        d.data[i].isOutdoorSeatingAvailable = d.data[i].isOutdoorSeatingAvailable.toString();
+                      }
+                      else{
+                        d.data[i].isOutdoorSeatingAvailable = "None";
+                      }
+                      if(d.data[i].isCreditCardAccepted != null){
+                        d.data[i].isCreditCardAccepted = d.data[i].isCreditCardAccepted.toString();
+                      }
+                      else{
+                        d.data[i].isCreditCardAccepted = "None";
+                      }
                     var cuisineList = "";
                     for(var k = 0; k < d.data[i].cuisines.length; k++){
                         cuisineList += d.data[i].cuisines[k].name;

@@ -100,16 +100,25 @@ export function LikedRestTab(){
                 //
                 data.data[i].isAlcoholServed = data.data[i].isAlcoholServed.toString();
                 data.data[i].isOpen = data.data[i].isOpen.toString();
-                if(data.data[i].likeDislike === 0){
-                    data.data[i].likeDislike = "Liked";
-
-                }
-                else if(data.data[i].likeDislike === 2){
-                    data.data[i].likeDislike = "Disliked";
-                }
-                else{
-                    data.data[i].likeDislike = "Not Selected";
-                }
+                if(data.data[i].wifi != null){
+                    data.data[i].wifi = data.data[i].wifi.toString();
+                  }
+                  else{
+                    data.data[i].wifi = "None";
+                  }
+                  if(data.data[i].isOutdoorSeatingAvailable != null){
+                    data.data[i].isOutdoorSeatingAvailable = data.data[i].isOutdoorSeatingAvailable.toString();
+                  }
+                  else{
+                    data.data[i].isOutdoorSeatingAvailable = "None";
+                  }
+                  if(data.data[i].isCreditCardAccepted != null){
+                    data.data[i].isCreditCardAccepted = data.data[i].isCreditCardAccepted.toString();
+                  }
+                  else{
+                    data.data[i].isCreditCardAccepted = "None";
+                  }
+                data.data[i].likeDislike = "Liked";
 
                 var cuisineList = "";
                 for(var j = 0; j < data.data[i].cuisines.length; j++){
@@ -154,6 +163,8 @@ export function LikedRestTab(){
         <RestPropertyFilterTable
         data={restaurants}
         selectedItems={selectedItems}
+        onSelectionChange={event => setSelectedItems(event.detail.selectedItems)}
+
         loadHelpPanelContent={() => {
         setToolsOpen(true);
         appLayout.current?.focusToolsClose();
@@ -162,6 +173,7 @@ export function LikedRestTab(){
         saveWidths={saveWidths}
         preferences={preferences}
         setPreferences={setPreferences}
+        onLike={onLikeConfirm}
         filteringProperties={REST_FILTERING_PROPERTIES}
         />
     </Box>
