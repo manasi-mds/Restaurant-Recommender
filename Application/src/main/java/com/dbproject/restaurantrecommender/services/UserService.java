@@ -155,8 +155,10 @@ public class UserService implements IUserService {
     }
 
     private void addDistancePreference(UserPreferenceDTO userPreferenceDTO, UserEntity user) {
-        if (userPreferenceDTO.getDistance() == null)
+        if (userPreferenceDTO.getDistance() == null){
+            user.setDistancePreference(null);
             return;
+        }
         Preconditions.checkArgument(userPreferenceDTO.getDistance() > 0, "Distance in miles cannot be less than 0");
         user.addDistancePreference(userPreferenceDTO.getDistance());
     }
