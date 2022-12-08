@@ -5,7 +5,6 @@ import com.dbproject.restaurantrecommender.dto.RestaurantUserDTO;
 import com.dbproject.restaurantrecommender.model.RestaurantEntity;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -60,8 +59,15 @@ public class RestaurantMapper {
         restaurantDTO.setIsCreditCardAccepted(restaurantEntity.getAcceptsCreditCard() == null ? null : restaurantEntity.getAcceptsCreditCard().isCreditCardAccepted());
         restaurantDTO.setIsOpen(restaurantEntity.isOpen());
         restaurantDTO.setIsOutdoorSeatingAvailable(restaurantEntity.getHasOutdoorSeating() == null ? null : restaurantEntity.getHasOutdoorSeating().isOutdoorSeatingAvailable());
-        if(likedRestaurants!=null && likedRestaurants.contains(restaurantEntity.getId())) restaurantDTO.setIsLiked(true);
-        if(dislikedRestaurants!=null && dislikedRestaurants.contains(restaurantEntity.getId())) restaurantDTO.setIsDisliked(true);
+
+        if(likedRestaurants!=null && likedRestaurants.contains(restaurantEntity.getId())) {
+            restaurantDTO.setLikeDislike(0);
+        } else if(dislikedRestaurants!=null && dislikedRestaurants.contains(restaurantEntity.getId())) {
+            restaurantDTO.setLikeDislike(2);
+        } else {
+            restaurantDTO.setLikeDislike(1);
+        }
+
         restaurantDTO.setCosineSimilarity(cosineSimilarity);
         if(distanceMap!=null && distanceMap.containsKey(restaurantEntity.getId())) restaurantDTO.setDistance(distanceMap.get(restaurantEntity.getId()));
         return restaurantDTO;

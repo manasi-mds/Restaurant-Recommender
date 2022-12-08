@@ -32,7 +32,8 @@ public class RestaurantService implements IRestaurantService {
         Set<Long> likedRestaurants = user.getLikedRestaurants().stream().map(lr-> lr.getRestaurantEntity().getId()).collect(Collectors.toSet());
         Set<Long> dislikedRestaurants = user.getDislikedRestaurants().stream().map(lr-> lr.getRestaurantEntity().getId()).collect(Collectors.toSet());
         List<RestaurantEntity> restaurantEntities = restaurantRepository.findAll();
-        return restaurantEntities.stream().map(r-> RestaurantMapper.convertToUserDTO(r, likedRestaurants, dislikedRestaurants, null, null)).collect(Collectors.toList());
+        return restaurantEntities.stream().map(r-> RestaurantMapper.convertToUserDTO(r, likedRestaurants, dislikedRestaurants, null, null))
+                .sorted(Comparator.comparing(RestaurantUserDTO::getLikeDislike)).collect(Collectors.toList());
     }
 
     @Override
