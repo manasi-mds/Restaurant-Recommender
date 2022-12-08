@@ -125,7 +125,15 @@ public class UserService implements IUserService {
         addCreditCardPreference(userPreferenceDTO, user);
         addOutdoorSeatingPreference(userPreferenceDTO, user);
         addRatingPreference(userPreferenceDTO, user);
+        addDistancePreference(userPreferenceDTO, user);
         userRepository.save(user);
+    }
+
+    private void addDistancePreference(UserPreferenceDTO userPreferenceDTO, UserEntity user) {
+        if (userPreferenceDTO.getDistance() == null)
+            return;
+        Preconditions.checkArgument(userPreferenceDTO.getDistance() > 0, "Distance in miles cannot be less than 0");
+        user.addDistancePreference(userPreferenceDTO.getDistance());
     }
 
     private void addRatingPreference(UserPreferenceDTO userPreferenceDTO, UserEntity user) {
@@ -137,7 +145,7 @@ public class UserService implements IUserService {
         checkRating(userPreferenceDTO.getMinimumRating().getMinRating());
         Optional<RatingEntity> ratingEntity = ratingRepository.findByRating(userPreferenceDTO.getMinimumRating().getMinRating());
         Preconditions.checkArgument(ratingEntity.isPresent(), "Rating info " + userPreferenceDTO.getMinimumRating().getMinRating() + " does not exist in the database");
-        user.addRatingPreference(ratingEntity.get(), userPreferenceDTO.getMinimumRating().getWeight());
+        user.addRatingPreference(ratingEntity.get());
     }
 
     private void addOutdoorSeatingPreference(UserPreferenceDTO userPreferenceDTO, UserEntity user) {

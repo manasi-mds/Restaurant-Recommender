@@ -18,6 +18,8 @@ import { UserPreferences } from './TabContents/userUpdate';
 import {GenRestTab} from './TabContents/generalRest';
 import {GetFollowersTab} from './TabContents/userQuery';
 import {LikedRestTab} from './TabContents/likedRest';
+import {PFollowingTab} from './TabContents/potentialFriend';
+
 function App() {
   
   
@@ -56,14 +58,20 @@ function App() {
           label: "Liked Restaurants",
           id: "likeRest",
           content:
-          LikedRestTab()
-          
+          LikedRestTab()  
         },
         {
           label: "Following",
           id: "following",
           content:
           GetFollowersTab()
+          
+        },
+        {
+          label: "Find People to Follow",
+          id: "follower",
+          content:
+          PFollowingTab()
           
         }
       ]}

@@ -178,16 +178,6 @@ export function RestPropertyFilterTable({
       resizableColumns={true}
       wrapLines={preferences.wrapLines}
       onColumnWidthsChange={saveWidths}
-      /*
-      header={
-        <FullPageHeader
-          selectedItems={collectionProps.selectedItems}
-          totalItems={data}
-          loadHelpPanelContent={loadHelpPanelContent}
-          serverSide={false}
-        />
-      }*/
-      ///*
       header={
         <TableHeader
           variant="awsui-h1-sticky"

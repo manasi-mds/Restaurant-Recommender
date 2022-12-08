@@ -36,12 +36,13 @@ export function GetFollowersTab(){
     const [error, setError] = React.useState(false);
     const [restaurants, setRestaurants] = React.useState([])
     const [selectedItems, setSelectedItems] = React.useState([]);
+    const [selectedUsers, setSelectedUsers] = React.useState([]);
 
     const handleSubmit = async (event) => {
     event.preventDefault();
         try {
             const response = await fetch(
-                '/user/'+user
+                '/user/'+user + '/followedUsers'
             );
             const data = await response.json();
             setFollowers(data.data)
@@ -134,6 +135,8 @@ export function GetFollowersTab(){
                 </FormControl>
             </form>
             <UserPropertyFilterTable
+            selectedItems={selectedUsers}
+            onSelectionChange={event => setSelectedUsers(event.detail.selectedItems)}
                 data={followers}
                 loadHelpPanelContent={() => {
                 setToolsOpen(true);

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.neo4j.driver.internal.util.Preconditions;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import java.util.*;
@@ -47,6 +48,9 @@ public class UserEntity extends BaseEntity{
 
     @Relationship(type = "DISLIKE_RESTAURANT", direction = OUTGOING)
     Set<DislikeRestaurant> dislikedRestaurants =  new HashSet<>();
+
+    @Property("max_distance")
+    Double distancePreference;
 
     public void followUser(UserEntity user2, Boolean follow) {
         if(this.following==null)
@@ -158,11 +162,14 @@ public class UserEntity extends BaseEntity{
         this.outdoorSeatingPreference = op;
     }
 
-    public void addRatingPreference(RatingEntity ratingEntity, Integer weight) {
+    public void addRatingPreference(RatingEntity ratingEntity) {
         RatingPreference rp = new RatingPreference();
-        rp.setWeight(weight);
         rp.setRatingEntity(ratingEntity);
         this.minimumRating = rp;
+    }
+
+    public void addDistancePreference(Double distance) {
+        this.distancePreference = distance;
     }
 }
 

@@ -21,4 +21,5 @@ public class UserPreferenceDTO {
     WifiPreferenceDTO wifiTypeAvailable;
     RatingPreferenceDTO minimumRating;
     OutdoorSeatingPreferenceDTO outdoorSeating;
+    Double distance;
 }

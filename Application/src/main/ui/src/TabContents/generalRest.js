@@ -56,8 +56,8 @@ export function GenRestTab(){
             }
         }
         
-        //setRestaurants(restaurants.filter(d => !selectedItems.includes(d)));
-        //setSelectedItems([]);
+        setRestaurants(restaurants.filter(d => !selectedItems.includes(d)));
+        setSelectedItems([]);
     };
 
     const fetchRestData = async (event) => {

@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface IRestaurantService {
     List<RestaurantUserDTO> getAllRestaurants(Long userId);
     Optional<RestaurantDTO> getRestaurantById(Long restaurantId);
-    List<RestaurantUserDTO> getPreferredRestaurants(Long userId);
+    List<RestaurantUserDTO> getPreferredRestaurants(Long userId, Double lat, Double lon);
 }

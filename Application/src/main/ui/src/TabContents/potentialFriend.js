@@ -18,46 +18,59 @@ import {UserPropertyFilterTable} from '../tables/users';
 import { USER_COLUMN_DEFINITIONS, USER_FILTERING_PROPERTIES, USER_DEFAULT_PREFERENCES } from '../tables/usersConfig';
 
 
-export function LikedRestTab(){
+export function PFollowingTab(){
     const [userColumnDefinitions, userSaveWidths] = useColumnWidths('React-TableServerSide-Widths', USER_COLUMN_DEFINITIONS);
     const [userPreferences, userSetPreferences] = useLocalStorage('React-DistributionsTable-Preferences', USER_DEFAULT_PREFERENCES);
     const [toolsOpen, setToolsOpen] = React.useState(false);
     const appLayout = React.useRef();
     //Vector for user inputs
     const [user, setUser] = React.useState("");
+    const [pFriends, setPFriends] = React.useState([]);
     const [error, setError] = React.useState(false);
     const [selectedItems, setSelectedItems] = React.useState([]);
-
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
             const response = await fetch(
-                '/user/' + user + '/likedRestaurants'
+                '/user/' + user + '/potentialFriends'
             );
             const data = await response.json();
-            
-            for(var i = 0; i < data.data.length; i++){
-                //
-                data.data[i].isAlcoholServed = data.data[i].isAlcoholServed.toString();
-                data.data[i].isOpen = data.data[i].isOpen.toString();
-                var cuisineList = "";
-                for(var j = 0; j < data.data[i].cuisines.length; j++){
-                    cuisineList += data.data[i].cuisines[j].name;
-                    if(j < data.data[i].cuisines.length - 1){
-                        cuisineList+=", ";
-                    }
-                }
-                data.data[i].cuisines = cuisineList;
-            }
-            setRestaurants(data.data)
-
-        
+            setPFriends(data.data)
         } catch (e) {
             console.error(e);
         }
     }
   
+
+    const onLikeConfirm = (event) => {
+        console.log("User: ", user);
+        console.log("selectedItems: ", selectedItems);
+
+        if(selectedItems.length >0){
+            for(var follows = 0; follows < selectedItems.length; follows++){
+                try{
+                    event.preventDefault();
+                    fetch('/user/' + user + '/follow/' + selectedItems[follows].id + "?follow=true", {
+                    method: 'PUT',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                    })
+                    .then(response => response.json())
+                    .then(response => console.log(JSON.stringify(response)))
+                }
+                catch (e) {
+                    console.error(e);
+                }
+            }
+        }
+        
+        //setPFriends(pFriends.filter(d => !selectedItems.includes(d)));
+        //setSelectedItems([]);
+    };
+
   return(
     <Box>
 
@@ -82,17 +95,20 @@ export function LikedRestTab(){
             </FormControl>
         </form>
         <UserPropertyFilterTable
-                data={followers}
-                loadHelpPanelContent={() => {
-                setToolsOpen(true);
-                appLayout.current?.focusToolsClose();
-                }}
-                columnDefinitions={userColumnDefinitions}
-                saveWidths={userSaveWidths}
-                preferences={userPreferences}
-                setPreferences={userSetPreferences}
-                filteringProperties={USER_FILTERING_PROPERTIES}
-            />
+            data={pFriends}
+            selectedItems={selectedItems}
+            onSelectionChange={event => setSelectedItems(event.detail.selectedItems)}
+            loadHelpPanelContent={() => {
+            setToolsOpen(true);
+            appLayout.current?.focusToolsClose();
+            }}
+            columnDefinitions={userColumnDefinitions}
+            saveWidths={userSaveWidths}
+            preferences={userPreferences}
+            setPreferences={userSetPreferences}
+            filteringProperties={USER_FILTERING_PROPERTIES}
+            onFollow={onLikeConfirm}
+        />
     </Box>
   
   )
