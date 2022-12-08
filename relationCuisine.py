@@ -26,7 +26,8 @@ cuisines_to_remove = ['Outdoor Gear', 'Airport Shuttles', 'Tennis', 'Recreation 
  'Adult Entertainment', 'Candle Stores', 'Shipping Centers', 'Books', 'Barbers', "Golf Lessons"]
 #graph = Graph('neo4j://localhost:11003', user="", password="")
 
-graph = Graph('neo4j+s://ab6bbbca.databases.neo4j.io:7687', user="neo4j", password="qeARmHp0V_OSxravPEZC-yot-unRoFsI5YgYy5Ws-Hs")
+# graph = Graph('neo4j+s://ab6bbbca.databases.neo4j.io:7687', user="neo4j", password="qeARmHp0V_OSxravPEZC-yot-unRoFsI5YgYy5Ws-Hs")
+graph = Graph('bolt://localhost:7687', user="neo4j", password="local123")
 
 with open("philadelphia.json", 'r') as fo:
     rest = json.load(fo)

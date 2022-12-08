@@ -3,7 +3,8 @@ import json
 from py2neo import Graph
 from py2neo import Node, Relationship
 
-graph = Graph('neo4j://localhost:11003', user="", password="")
+# graph = Graph('neo4j://localhost:11003', user="", password="")
+graph = Graph('bolt://localhost:7687', user="neo4j", password="local123")
 
 #graph = Graph('neo4j://localhost:11003', user="neo4j", password="123")
 
