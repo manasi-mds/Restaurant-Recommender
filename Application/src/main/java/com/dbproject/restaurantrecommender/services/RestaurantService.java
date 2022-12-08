@@ -1,6 +1,6 @@
 package com.dbproject.restaurantrecommender.services;
 
-import com.dbproject.restaurantrecommender.DistanceUtil;
+import com.dbproject.restaurantrecommender.utility.DistanceUtil;
 import com.dbproject.restaurantrecommender.dto.AmbienceDTO;
 import com.dbproject.restaurantrecommender.dto.RestaurantDTO;
 import com.dbproject.restaurantrecommender.dto.RestaurantUserDTO;

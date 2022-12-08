@@ -1,4 +1,4 @@
-package com.dbproject.restaurantrecommender;
+package com.dbproject.restaurantrecommender.utility;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
