@@ -88,7 +88,7 @@ public class RestaurantService implements IRestaurantService {
         if(strictAlcoholPreference != null)
             restaurantEntities = restaurantEntities.stream().filter(r -> r.getHasAlcohol()!=null && r.getHasAlcohol().getId().equals(strictAlcoholPreference.getAlcoholEntity().getId())).collect(Collectors.toList());
 
-//        // Distance filtering
+        // Distance filtering
         HashMap<Long, Double> restaurantDistance = new HashMap<>();
 //        if(lat!=null && lon!=null && user.getDistancePreference()!=null) {
 //            String userLatLong = lat + "," + lon;
@@ -112,7 +112,27 @@ public class RestaurantService implements IRestaurantService {
 //                .sorted(Comparator.comparing(RestaurantUserDTO::getCosineSimilarity, Comparator.reverseOrder()).thenComparing(RestaurantUserDTO::getDistance, Comparator.reverseOrder())).toList();
 
 
+        if(lat!=null && lon!=null && user.getDistancePreference()!=null) {
+            restaurantEntities = restaurantEntities.stream().filter(r -> {
+                try {
+                    if(r.getLatitude()==null || r.getLongitude()==null)
+                        return false;
+                    Double distance = DistanceUtil.directDistanceInMiles(lat, lon, r.getLatitude(), r.getLongitude(), 'M');
+                    restaurantDistance.put(r.getId(), distance);
+                    return distance <= user.getDistancePreference();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }).collect(Collectors.toList());
+        }
 
+        if(lat!=null && lon!=null && user.getDistancePreference()!=null)
+        return restaurantEntities.stream()
+                .map(r -> RestaurantMapper.convertToUserDTO(r, likedRestaurants, null, calculateCosineSimilarity(createCosineForUser(user), createCosineForRestaurant(user, r)), restaurantDistance))
+                .sorted(Comparator.comparing(RestaurantUserDTO::getCosineSimilarity, Comparator.reverseOrder()).thenComparing(RestaurantUserDTO::getDistance, Comparator.reverseOrder())).toList();
+
+        else
         return restaurantEntities.stream()
                 .map(r -> RestaurantMapper.convertToUserDTO(r, likedRestaurants, null, calculateCosineSimilarity(createCosineForUser(user), createCosineForRestaurant(user, r)), restaurantDistance))
                 .sorted(Comparator.comparing(RestaurantUserDTO::getCosineSimilarity, Comparator.reverseOrder())).toList();

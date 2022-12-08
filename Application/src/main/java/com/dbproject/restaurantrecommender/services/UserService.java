@@ -9,7 +9,6 @@ import com.dbproject.restaurantrecommender.dto.preference.CuisinePreferenceDTO;
 import com.dbproject.restaurantrecommender.enums.WifiType;
 import com.dbproject.restaurantrecommender.mapper.RestaurantMapper;
 import com.dbproject.restaurantrecommender.mapper.UserMapper;
-import com.dbproject.restaurantrecommender.mapper.UserPreferenceMapper;
 import com.dbproject.restaurantrecommender.model.*;
 import com.dbproject.restaurantrecommender.respsitory.*;
 import lombok.RequiredArgsConstructor;
