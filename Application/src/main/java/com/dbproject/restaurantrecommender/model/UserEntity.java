@@ -76,10 +76,11 @@ public class UserEntity extends BaseEntity{
 
         if(like) {
             Preconditions.checkArgument(this.likedRestaurants.stream().noneMatch(lr -> lr.getRestaurantEntity().getId().equals(restaurant.getId())), "Already liked restaurant " + restaurant.getName());
-            Optional<DislikeRestaurant> dislikedRest = this.dislikedRestaurants.stream()
-                    .filter(user -> user.getRestaurantEntity().getId().equals(restaurant.getId()))
-                    .findAny();
-            dislikedRest.ifPresent(dislikeRestaurant -> this.dislikedRestaurants.remove(dislikeRestaurant));
+            Preconditions.checkArgument(this.dislikedRestaurants.stream().noneMatch(dr -> dr.getRestaurantEntity().getId().equals(restaurant.getId())), "Un-dislike the restaurant " + restaurant.getName());
+//            Optional<DislikeRestaurant> dislikedRest = this.dislikedRestaurants.stream()
+//                    .filter(user -> user.getRestaurantEntity().getId().equals(restaurant.getId()))
+//                    .findAny();
+//            dislikedRest.ifPresent(dislikeRestaurant -> this.dislikedRestaurants.remove(dislikeRestaurant));
 
             LikeRestaurant likeRestaurant = new LikeRestaurant();
             likeRestaurant.setRestaurantEntity(restaurant);
@@ -99,10 +100,11 @@ public class UserEntity extends BaseEntity{
 
         if(dislike) {
             Preconditions.checkArgument(this.dislikedRestaurants.stream().noneMatch(lr -> lr.getRestaurantEntity().getId().equals(restaurant.getId())), "Already disliked restaurant " + restaurant.getName());
-            Optional<LikeRestaurant> likedRest = this.likedRestaurants.stream()
-                    .filter(user -> user.getRestaurantEntity().getId().equals(restaurant.getId()))
-                    .findAny();
-            likedRest.ifPresent(likeRestaurant -> this.likedRestaurants.remove(likeRestaurant));
+            Preconditions.checkArgument(this.likedRestaurants.stream().noneMatch(dr -> dr.getRestaurantEntity().getId().equals(restaurant.getId())), "Un-like the restaurant " + restaurant.getName());
+//            Optional<LikeRestaurant> likedRest = this.likedRestaurants.stream()
+//                    .filter(user -> user.getRestaurantEntity().getId().equals(restaurant.getId()))
+//                    .findAny();
+//            likedRest.ifPresent(likeRestaurant -> this.likedRestaurants.remove(likeRestaurant));
 
             DislikeRestaurant dislikeRestaurant = new DislikeRestaurant();
             dislikeRestaurant.setRestaurantEntity(restaurant);
