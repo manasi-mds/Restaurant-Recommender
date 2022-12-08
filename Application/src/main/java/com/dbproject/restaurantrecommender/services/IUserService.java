@@ -15,7 +15,6 @@ public interface IUserService {
     void dislikeRestaurant(Long userId, Long restaurantId, Boolean dislike);
     List<RestaurantDTO> getLikedRestaurants(Long userId);
     List<UserDTO> getPotentialFriends(Long userId);
-
     List<UserPreferenceDTO> getPotentialFriendsPreferences(Long userId);
     List<RestaurantDTO> getPotentialRestaurants(Long userId);
     void createPreference(Long userId, UserPreferenceDTO userPreferenceDTO);
