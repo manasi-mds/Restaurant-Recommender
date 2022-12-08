@@ -25,8 +25,7 @@ public class RestaurantUserDTO {
     Boolean isCreditCardAccepted;
     Boolean isOpen;
     Boolean isOutdoorSeatingAvailable;
-    Boolean isLiked;
-    Boolean isDisliked;
+    Integer likeDislike;
     Double cosineSimilarity;
     Double distance;
 }

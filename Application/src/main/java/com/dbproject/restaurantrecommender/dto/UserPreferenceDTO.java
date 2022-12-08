@@ -14,6 +14,9 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserPreferenceDTO {
     Long userId;
+    String name;
+    String email;
+    String password;
     AlcoholServedPreferenceDTO alcoholServed;
     List<CuisinePreferenceDTO> cuisines;
     List<AmbiencePreferenceDTO> ambiences;
