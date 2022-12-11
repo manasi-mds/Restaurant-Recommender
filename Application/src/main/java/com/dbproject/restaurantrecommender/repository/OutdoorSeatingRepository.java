@@ -1,4 +1,4 @@
-package com.dbproject.restaurantrecommender.respsitory;
+package com.dbproject.restaurantrecommender.repository;
 
 import com.dbproject.restaurantrecommender.model.OutdoorSeatingEntity;
 import org.springframework.data.neo4j.repository.Neo4jRepository;

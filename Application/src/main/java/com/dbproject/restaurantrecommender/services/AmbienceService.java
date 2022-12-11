@@ -3,9 +3,8 @@ package com.dbproject.restaurantrecommender.services;
 import com.dbproject.restaurantrecommender.dto.AmbienceDTO;
 import com.dbproject.restaurantrecommender.mapper.AmbienceMapper;
 import com.dbproject.restaurantrecommender.model.AmbienceEntity;
-import com.dbproject.restaurantrecommender.respsitory.AmbienceRepository;
+import com.dbproject.restaurantrecommender.repository.AmbienceRepository;
 import lombok.RequiredArgsConstructor;
-import org.neo4j.driver.internal.util.Preconditions;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

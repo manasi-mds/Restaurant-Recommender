@@ -10,7 +10,7 @@ import com.dbproject.restaurantrecommender.enums.WifiType;
 import com.dbproject.restaurantrecommender.mapper.RestaurantMapper;
 import com.dbproject.restaurantrecommender.mapper.UserMapper;
 import com.dbproject.restaurantrecommender.model.*;
-import com.dbproject.restaurantrecommender.respsitory.*;
+import com.dbproject.restaurantrecommender.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.neo4j.driver.internal.util.Preconditions;

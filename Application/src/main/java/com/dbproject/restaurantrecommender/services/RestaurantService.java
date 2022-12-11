@@ -10,7 +10,7 @@ import com.dbproject.restaurantrecommender.model.CuisinePreference;
 import com.dbproject.restaurantrecommender.model.RestaurantEntity;
 import com.dbproject.restaurantrecommender.model.UserEntity;
 import com.dbproject.restaurantrecommender.model.*;
-import com.dbproject.restaurantrecommender.respsitory.RestaurantRepository;
+import com.dbproject.restaurantrecommender.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
 import org.neo4j.driver.internal.util.Preconditions;
 import org.springframework.stereotype.Service;

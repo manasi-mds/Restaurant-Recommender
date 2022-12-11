@@ -3,7 +3,7 @@ package com.dbproject.restaurantrecommender.services;
 import com.dbproject.restaurantrecommender.dto.CuisineDTO;
 import com.dbproject.restaurantrecommender.mapper.CuisineMapper;
 import com.dbproject.restaurantrecommender.model.CuisineEntity;
-import com.dbproject.restaurantrecommender.respsitory.CuisineRepository;
+import com.dbproject.restaurantrecommender.repository.CuisineRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
