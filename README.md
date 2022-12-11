@@ -34,3 +34,7 @@ Java 17\
 Node.js 18\
 Postman Link:
 https://api.postman.com/collections/21978038-aa3bd017-b380-40fb-aa4f-d3edb67e4330?access_key=PMAT-01GKQCH23XBD8YHTKGF7ZMTPBD
+
+## Third-party libraries
+Maven, Spring Boot(Spring Data Neo4j, detailed in pom.xml), reactjs
+
