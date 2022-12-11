@@ -1,7 +1,6 @@
 package com.dbproject.restaurantrecommender.services;
 
 import com.dbproject.restaurantrecommender.utility.DistanceUtil;
-import com.dbproject.restaurantrecommender.dto.AmbienceDTO;
 import com.dbproject.restaurantrecommender.dto.RestaurantDTO;
 import com.dbproject.restaurantrecommender.dto.RestaurantUserDTO;
 import com.dbproject.restaurantrecommender.enums.WifiType;
@@ -90,27 +89,28 @@ public class RestaurantService implements IRestaurantService {
 
         // Distance filtering
         HashMap<Long, Double> restaurantDistance = new HashMap<>();
-//        if(lat!=null && lon!=null && user.getDistancePreference()!=null) {
-//            String userLatLong = lat + "," + lon;
-//            restaurantEntities = restaurantEntities.stream().filter(r -> {
-//                try {
-//                    if(r.getLatitude()==null || r.getLongitude()==null)
-//                        return false;
-//                    String restaurantLatLong = r.getLatitude() + "," + r.getLongitude();
-//                    Double distance = DistanceUtil.getDistanceInMiles(userLatLong, restaurantLatLong);
-//                    restaurantDistance.put(r.getId(), distance);
-//                    return distance!=null && distance <= user.getDistancePreference();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    return false;
-//                }
-//            }).collect(Collectors.toList());
-//        }
+        /* Commenting the Google API distance calculation
+        if(lat!=null && lon!=null && user.getDistancePreference()!=null) {
+            String userLatLong = lat + "," + lon;
+            restaurantEntities = restaurantEntities.stream().filter(r -> {
+                try {
+                    if(r.getLatitude()==null || r.getLongitude()==null)
+                        return false;
+                    String restaurantLatLong = r.getLatitude() + "," + r.getLongitude();
+                    Double distance = DistanceUtil.getDistanceInMiles(userLatLong, restaurantLatLong);
+                    restaurantDistance.put(r.getId(), distance);
+                    return distance!=null && distance <= user.getDistancePreference();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }).collect(Collectors.toList());
+        }
 
-//        return restaurantEntities.stream()
-//                .map(r -> RestaurantMapper.convertToUserDTO(r, likedRestaurants, null, calculateCosineSimilarity(createCosineForUser(user), createCosineForRestaurant(user, r)), restaurantDistance))
-//                .sorted(Comparator.comparing(RestaurantUserDTO::getCosineSimilarity, Comparator.reverseOrder()).thenComparing(RestaurantUserDTO::getDistance, Comparator.reverseOrder())).toList();
-
+        return restaurantEntities.stream()
+                .map(r -> RestaurantMapper.convertToUserDTO(r, likedRestaurants, null, calculateCosineSimilarity(createCosineForUser(user), createCosineForRestaurant(user, r)), restaurantDistance))
+                .sorted(Comparator.comparing(RestaurantUserDTO::getCosineSimilarity, Comparator.reverseOrder()).thenComparing(RestaurantUserDTO::getDistance, Comparator.reverseOrder())).toList();
+        */
 
         if(lat!=null && lon!=null && user.getDistancePreference()!=null) {
             restaurantEntities = restaurantEntities.stream().filter(r -> {
@@ -130,7 +130,7 @@ public class RestaurantService implements IRestaurantService {
         if(lat!=null && lon!=null && user.getDistancePreference()!=null)
         return restaurantEntities.stream()
                 .map(r -> RestaurantMapper.convertToUserDTO(r, likedRestaurants, null, calculateCosineSimilarity(createCosineForUser(user), createCosineForRestaurant(user, r)), restaurantDistance))
-                .sorted(Comparator.comparing(RestaurantUserDTO::getCosineSimilarity, Comparator.reverseOrder()).thenComparing(RestaurantUserDTO::getDistance, Comparator.reverseOrder())).toList();
+                .sorted(Comparator.comparing(RestaurantUserDTO::getCosineSimilarity, Comparator.reverseOrder()).thenComparing(RestaurantUserDTO::getDistance)).toList();
 
         else
         return restaurantEntities.stream()
@@ -138,11 +138,7 @@ public class RestaurantService implements IRestaurantService {
                 .sorted(Comparator.comparing(RestaurantUserDTO::getCosineSimilarity, Comparator.reverseOrder())).toList();
     }
 
-    //1->0.2
-    //2->0.4
-    //3->0.6
-    //4->0.8
-    //5->1.0
+    //1->0.2, 2->0.4, 3->0.6, 4->0.8, 5->1.0
     private double convertWeight(int weight) {
         return (double) weight /5.0;
     }
@@ -187,6 +183,7 @@ public class RestaurantService implements IRestaurantService {
     }
 
 
+    /*
     private ArrayList<Double> createCombinedCosine(List<UserEntity> users) {
         ArrayList<Double> restCosine = new ArrayList<>();
         ArrayList<AmbienceDTO> amb;
@@ -205,12 +202,10 @@ public class RestaurantService implements IRestaurantService {
             }
         }
 
-
-
-
         return restCosine;
 
     }
+    */
 
     private ArrayList<Double> createCosineForRestaurant(UserEntity user, RestaurantEntity restaurant) {
         ArrayList<Double> restCosine = new ArrayList<>();

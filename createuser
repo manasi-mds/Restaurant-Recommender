@@ -1,1 +1,0 @@
-CREATE (n:Person {firstname: 'Andy', lastname: 'Smith', email: 'andysmith@gmail.com'})

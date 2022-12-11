@@ -1,1 +1,0 @@
-MATCH(n:Person), (m:Person) WHERE n.firstname = 'Andy' AND m.firstname = 'Mason' CREATE (m)-[r:FOLLOWS{ score: 5 }]->(n);
