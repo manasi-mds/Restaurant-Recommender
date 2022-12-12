@@ -102,6 +102,22 @@ Changed the code to use our data, combined filter feature from property filter t
 ###### Backend Files
 
 ###### Frontend Files
+```App.js``` 
+```users.jsx```   
+```restTable.jsx```   
+```recRestTable.jsx```   
+```sample_table.jsx```   
+```prefRestTable.jsx```
+```restTable-property-filter-config.js```   
+```recRestTable-property-filter-config.js```   
+```sample_table-property-filter-config.js```   
+```prefRestTable-property-filter-config.js```
+```likedRest.js```   
+```userQuery.js```   
+```userSignup.js```   
+```userUpdate.js```   
+```generalRest.js```   
+```potentialFriend.js```
 
 ## Screenshot of the Application
 ![Screenshot](screenshot/examplequery.png)
