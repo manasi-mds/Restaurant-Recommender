@@ -78,7 +78,16 @@ None
 ## Changes to the frontend code referenced 
 Changed the code to use our data, combined filter feature from property filter table with deletion and button functionality of simple delete table. 
 
+## List of files by us
 
-## Screenshot of Application
+###### Python files for the data
+```loadRestaurant.py```/
+```loadAlcohol.py```
+
+###### Backend Files
+
+###### Frontend Files
+
+## Screenshot of the Application
 ![Screenshot](screenshot/examplequery.png)
 
