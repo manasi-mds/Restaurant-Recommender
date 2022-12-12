@@ -68,8 +68,8 @@ This file runs
 
 ## Other sources
 ###### For the frontend
-UI elements based on and sourced from https://github.com/cloudscape-design/demos, featured in https://cloudscape.design/demos/overview/.\ 
-Map code based on the example in https://github.com/google-map-react/google-map-react.\
+UI elements based on and sourced from https://github.com/cloudscape-design/demos, featured in https://cloudscape.design/demos/overview/. 
+Map code based on the example in https://github.com/google-map-react/google-map-react.
 Both are licensed under the MIT license. 
 
 ###### For the backend
