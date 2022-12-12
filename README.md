@@ -41,9 +41,9 @@ Maven, Spring Boot(Spring Data Neo4j, detailed in pom.xml), reactjs
 
 ## If you have a GUI, how do we run it? 
 
-Running lazystart.sh \\
+Running lazystart.sh 
 
-This file runs \
-1. mvn generate \ 
+This file runs 
+1. mvn generate  
 2. java -jar target/RestaurantRecommender-0.0.1-SNAPSHOT.jar
 
