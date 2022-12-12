@@ -75,7 +75,7 @@ Both are licensed under the MIT license.
 ###### For the backend
 None
 
-## If you used some online code, what changes did you make to the code? 
+## Changes to the frontend code referenced 
 Changed the code to use our data, combined filter feature from property filter table with deletion and button functionality of simple delete table. 
 
 
