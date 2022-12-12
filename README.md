@@ -57,13 +57,13 @@ Install Maven (Optional) : https://maven.apache.org/install.html
 ```frontend-maven-plugin```
 ```maven-resources-plugin```
 
-## If you have a GUI, how do we run it? 
+## To run GUI
 
-Running lazystart.sh 
+Run ```lazystart.sh``` 
 
 This file runs 
-1. mvn generate  
-2. java -jar target/RestaurantRecommender-0.0.1-SNAPSHOT.jar
+1. ```mvn generate```
+2. ```java -jar target/RestaurantRecommender-0.0.1-SNAPSHOT.jar```
 
 
 ## Other sources
