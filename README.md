@@ -79,3 +79,6 @@ None
 Changed the code to use our data, combined filter feature from property filter table with deletion and button functionality of simple delete table. 
 
 
+## Screenshot of Application
+![Screenshot](screenshot/examplequery.png)
+
