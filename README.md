@@ -35,9 +35,27 @@ Node.js 18\
 Postman Link:
 https://api.postman.com/collections/21978038-aa3bd017-b380-40fb-aa4f-d3edb67e4330?access_key=PMAT-01GKQCH23XBD8YHTKGF7ZMTPBD
 
-## Third-party libraries
-Maven, Spring Boot(Spring Data Neo4j, detailed in pom.xml), reactjs
 
+## Third-party libraries
+MySQL/neo4j connector for Python) 
+Maven (backend libraries detailed in pom.xml)
+Install Maven (Optional) : https://maven.apache.org/install.html
+
+###Backend Dependencies (already included in pom.xml):
+```spring-boot-starter-data-neo4j```
+```spring-boot-starter-web```
+```spring-boot-devtools```
+```lombok```
+```spring-boot-starter-test```
+```commons-lang3```
+```json-simple```
+```spring-boot-starter-data-rest```
+```Spring-boot-starter-web```
+
+###Backend Plugins (already included in pom.xml):
+```spring-boot-maven-plugin```
+```frontend-maven-plugin```
+```maven-resources-plugin```
 
 ## If you have a GUI, how do we run it? 
 
