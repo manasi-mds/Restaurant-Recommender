@@ -81,7 +81,7 @@ Changed the code to use our data, combined filter feature from property filter t
 ## List of files by us
 
 ###### Python files for the data
-```loadRestaurant.py```/
+```loadRestaurant.py```
 ```loadAlcohol.py```
 
 ###### Backend Files
