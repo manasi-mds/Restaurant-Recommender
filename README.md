@@ -83,6 +83,21 @@ Changed the code to use our data, combined filter feature from property filter t
 ###### Python files for the data
 ```loadRestaurant.py```
 ```loadAlcohol.py```
+```loadAmbience.py```
+```loadCredit.py```
+```loadCuisine.py```
+```loadOutdoor.py```
+```loadRestaurantTimings.py```
+```loadStar.py```
+```loadWifi.py```
+```relationAlcohol.py```
+```relationAmbience.py```
+```relationCredit.py```
+```relationCuisine.py```
+```relationOutdoor.py```
+```relationStar.py```
+```relationWifi.py```
+
 
 ###### Backend Files
 
