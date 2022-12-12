@@ -41,7 +41,7 @@ MySQL/neo4j connector for Python)
 Maven (backend libraries detailed in pom.xml)
 Install Maven (Optional) : https://maven.apache.org/install.html
 
-###Backend Dependencies (already included in pom.xml):
+###### Backend Dependencies (already included in pom.xml):
 ```spring-boot-starter-data-neo4j```
 ```spring-boot-starter-web```
 ```spring-boot-devtools```
@@ -52,7 +52,7 @@ Install Maven (Optional) : https://maven.apache.org/install.html
 ```spring-boot-starter-data-rest```
 ```Spring-boot-starter-web```
 
-###Backend Plugins (already included in pom.xml):
+###### Backend Plugins (already included in pom.xml):
 ```spring-boot-maven-plugin```
 ```frontend-maven-plugin```
 ```maven-resources-plugin```
