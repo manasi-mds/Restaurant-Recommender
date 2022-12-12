@@ -37,8 +37,8 @@ https://api.postman.com/collections/21978038-aa3bd017-b380-40fb-aa4f-d3edb67e433
 
 
 ## Third-party libraries
-MySQL/neo4j connector for Python) 
-Maven (backend libraries detailed in pom.xml)
+MySQL/neo4j connector for Python)\
+Maven (backend libraries detailed in pom.xml)\
 Install Maven (Optional) : https://maven.apache.org/install.html
 
 ###### Backend Dependencies (already included in pom.xml):
